@@ -2021,7 +2021,8 @@
     "workspaceStore": "Çalışma Alanı Mağazası",
     "signIn": "Giriş yap",
     "feedback": "Geri bildirim",
-    "getDesktopApp": "Masaüstü uygulamasını indir"
+    "getDesktopApp": "Masaüstü uygulamasını indir",
+    "settings": "Ayarlar"
   },
   "feedback": {
     "title": "Hata bildir",

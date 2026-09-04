@@ -2021,7 +2021,8 @@
     "workspaceStore": "Workspace Store",
     "signIn": "เข้าสู่ระบบ",
     "feedback": "ความคิดเห็น",
-    "getDesktopApp": "ดาวน์โหลดแอปเดสก์ท็อป"
+    "getDesktopApp": "ดาวน์โหลดแอปเดสก์ท็อป",
+    "settings": "การตั้งค่า"
   },
   "feedback": {
     "title": "รายงานข้อผิดพลาด",

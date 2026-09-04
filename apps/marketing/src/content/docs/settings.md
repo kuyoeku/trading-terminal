@@ -4,12 +4,12 @@ description: 'Every setting in the terminal, and the three worth visiting first:
 group: traders
 order: 10
 eyebrow: For traders
-updated: 22 AUG 2026
+updated: 4 SEP 2026
 readTime: 11 min read
 ---
 
-Open settings with <kbd>⌘,</kbd>, from the user menu, or by searching for a
-section in omni-search.
+Open settings with <kbd>⌘,</kbd>, from the gear at the bottom of the left
+rail, from the user menu, or by searching for a section in omni-search.
 
 Three sections are worth visiting on your first day, and you can ignore the rest
 until something prompts you: **Risk Management** for your loss and position caps,

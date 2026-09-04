@@ -737,6 +737,7 @@ function TerminalLayout() {
                                 </span>
                               </SidebarMenuButton>
                             </SidebarMenuItem>
+                            <SettingsNavItem />
                           </SidebarMenu>
                           <TerminalUserMenu
                             initials={initials || 'PL'}
@@ -845,6 +846,38 @@ function DesktopCtaBadge() {
       <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
       <span className="relative inline-flex size-2.5 rounded-full bg-primary" />
     </span>
+  )
+}
+
+/**
+ * Settings lives in the footer with Feedback, not in the destination list:
+ * it is a dialog, not a page, so it never draws a section spine. Clicking
+ * again while it is open closes it, the way a rail item that is already
+ * current should.
+ */
+function SettingsNavItem() {
+  const { t } = useTranslation()
+  const shortcut = useKeybindingLabel('general.settings')
+  const isOpen = useSettingsDialogStore((s) => s.isOpen)
+
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        aria-label={t('nav.settings')}
+        className={RAIL_ITEM}
+        isActive={isOpen}
+        onClick={() => {
+          const state = useSettingsDialogStore.getState()
+          if (state.isOpen) state.close()
+          else state.open()
+        }}
+        type="button"
+      >
+        <Settings2 size={16} />
+        <span className="sr-only">{t('nav.settings')}</span>
+        <ShortcutHint keys={shortcut} />
+      </SidebarMenuButton>
+    </SidebarMenuItem>
   )
 }
 

@@ -2021,7 +2021,8 @@
     "workspaceStore": "Workspace Store",
     "signIn": "Masuk",
     "feedback": "Masukan",
-    "getDesktopApp": "Unduh aplikasi desktop"
+    "getDesktopApp": "Unduh aplikasi desktop",
+    "settings": "Pengaturan"
   },
   "feedback": {
     "title": "Laporkan bug",

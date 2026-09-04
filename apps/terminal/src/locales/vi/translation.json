@@ -2021,7 +2021,8 @@
     "workspaceStore": "Workspace Store",
     "signIn": "Đăng nhập",
     "feedback": "Phản hồi",
-    "getDesktopApp": "Tải ứng dụng máy tính"
+    "getDesktopApp": "Tải ứng dụng máy tính",
+    "settings": "Cài đặt"
   },
   "feedback": {
     "title": "Báo lỗi",

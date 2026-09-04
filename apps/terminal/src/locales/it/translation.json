@@ -2021,7 +2021,8 @@
     "workspaceStore": "Workspace Store",
     "signIn": "Accedi",
     "feedback": "Feedback",
-    "getDesktopApp": "Scarica l'app desktop"
+    "getDesktopApp": "Scarica l'app desktop",
+    "settings": "Impostazioni"
   },
   "feedback": {
     "title": "Segnala un bug",

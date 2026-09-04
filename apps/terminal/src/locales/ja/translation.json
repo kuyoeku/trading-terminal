@@ -2021,7 +2021,8 @@
     "workspaceStore": "ワークスペースストア",
     "signIn": "サインイン",
     "feedback": "フィードバック",
-    "getDesktopApp": "デスクトップアプリを入手"
+    "getDesktopApp": "デスクトップアプリを入手",
+    "settings": "設定"
   },
   "feedback": {
     "title": "バグを報告",
