@@ -1,9 +1,11 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { describe, expect, test } from 'bun:test'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { fanOutWebSearch, readSearchRequest } from '../lib/web-search'
 import { mapTavilyResults } from '../tavily-search'
-import { mapExaResults } from '../exa-search'
+import { exaBrowserRefusal, mapExaResults } from '../exa-search'
 import type { WebSearchResult } from '@pairlens/shared/plugin-types'
 
 function result(url: string): WebSearchResult {
@@ -129,5 +131,35 @@ describe('provider response mappers', () => {
   test('mappers return empty for malformed payloads', () => {
     expect(mapTavilyResults(null)).toEqual([])
     expect(mapExaResults({ results: 'nope' })).toEqual([])
+  })
+})
+
+describe('Exa is not a browser CORS API', () => {
+  test('exaBrowserRefusal names the browser as the blocked surface', () => {
+    expect(exaBrowserRefusal(true)).toMatch(/cannot run in the browser/)
+    expect(exaBrowserRefusal(false)).toBeNull()
+  })
+
+  test('searchOne goes through restFetch so desktop bypasses CORS', () => {
+    const source = readFileSync(
+      join(import.meta.dir, '../exa-search/index.ts'),
+      'utf8',
+    )
+    expect(source).toContain("from '@pairlens/market-engine/http'")
+    expect(source).toContain('restFetch')
+  })
+
+  test('desktop CSP and HTTP scope both admit api.exa.ai', () => {
+    const root = join(import.meta.dir, '../../../../')
+    const csp = readFileSync(
+      join(root, 'apps/desktop/src-tauri/src/csp.rs'),
+      'utf8',
+    )
+    const http = readFileSync(
+      join(root, 'apps/desktop/src-tauri/capabilities/default.json'),
+      'utf8',
+    )
+    expect(csp).toContain('https://api.exa.ai')
+    expect(http).toContain('https://api.exa.ai/*')
   })
 })

@@ -60,7 +60,8 @@
         { "url": "https://*.solana.com/*" },
         { "url": "https://mainnet.helius-rpc.com/*" },
         { "url": "https://api.coingecko.com/*" },
-        { "url": "https://open-api-v4.coinglass.com/*" }
+        { "url": "https://open-api-v4.coinglass.com/*" },
+        { "url": "https://api.exa.ai/*" }
       ]
     }
   ]

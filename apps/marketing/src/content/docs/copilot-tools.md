@@ -72,10 +72,11 @@ chat as a collapsible card that keeps the per-section presentation: verdict
 badge, sparkline with levels, trade-setup card, source cards. It takes tens of
 seconds and costs accordingly. See [research reports](/docs/research-reports).
 
-`web_search` needs an `ai:web-search` provider (Tavily or Exa with your own key,
-or hosted Intelligence). Whatever it finds is attributed: an answer built on a
-search carries a source count under it that opens into the list of pages. The
-rest of this family reads from the App Server and is unavailable in
+`web_search` needs an `ai:web-search` provider: Tavily (browser or desktop),
+Exa (desktop only: `api.exa.ai` refuses cross-origin requests), or hosted
+Intelligence. Whatever it finds is attributed: an answer built on a search
+carries a source count under it that opens into the list of pages. The rest of
+this family reads from the App Server and is unavailable in
 [standalone mode](/docs/self-hosting#standalone-mode).
 
 ## Prediction markets

@@ -5,7 +5,7 @@ group: traders
 parent: ai-copilot
 order: 2
 eyebrow: For traders
-updated: 1 SEP 2026
+updated: 4 SEP 2026
 readTime: 4 min read
 ---
 
@@ -24,8 +24,10 @@ assistant uses it, research included.
 
 **Inference.** Anthropic, OpenAI, DeepSeek, Groq, OpenRouter.
 
-**Web search.** Tavily, Exa. Without one of these, research reports still work
-but are built from market data alone.
+**Web search.** Tavily works in the browser and on desktop. Exa does not send
+CORS headers, so it only runs in the desktop app (and in local `bun run dev`,
+where the origin is localhost). Without a search provider, research reports
+still work but are built from market data alone.
 
 Your key is stored the same way an exchange key is: in the OS keychain on
 desktop, in the encrypted credential vault in a browser. Requests go from your machine

@@ -1,5 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { restFetch } from '@pairlens/market-engine/http'
+import { isCorsConstrained } from '@pairlens/market-engine/platform'
 import { fanOutWebSearch, readSearchRequest } from '../lib/web-search'
 import type {
   PluginExecuteParams,
@@ -8,8 +10,13 @@ import type {
 } from '@pairlens/plugin-system/types'
 import type { WebSearchResult } from '@pairlens/shared/plugin-types'
 
-// Exa Search — BYOK ai:web-search provider. api.exa.ai sends CORS headers,
-// so it works from the browser and the Tauri webview alike.
+// Exa Search — BYOK ai:web-search provider. api.exa.ai does NOT send CORS
+// headers for a real browser origin (they closed that as WONTFIX: calling
+// the API from a page would leak the key). Localhost is the one exception
+// they still allow. Everywhere else this plugin has to go through the
+// desktop Rust HTTP plugin (`restFetch`), the same path CORS-blocked
+// venues use. The hosted web terminal therefore cannot run Exa; Tavily
+// is the browser-capable search provider.
 
 export const exaSearchManifest: PluginManifest = {
   id: 'exa-search',
@@ -46,6 +53,16 @@ type ExaResult = {
   publishedDate?: string
 }
 
+/**
+ * Why Exa cannot activate in a CORS-constrained browser. Parameterised so
+ * `import.meta.env.DEV` (a build-time constant) is not the thing the test
+ * has to fight.
+ */
+export function exaBrowserRefusal(corsConstrained: boolean): string | null {
+  if (!corsConstrained) return null
+  return 'Exa Search cannot run in the browser: api.exa.ai refuses cross-origin requests. Use the desktop app, or pick Tavily.'
+}
+
 /** Map a raw Exa /search response to the WebSearchResult wire contract. */
 export function mapExaResults(data: unknown): Array<WebSearchResult> {
   const results = (data as { results?: Array<ExaResult> } | null)?.results
@@ -69,7 +86,7 @@ export function createExaSearchPlugin(
     query: string,
     perQueryLimit: number,
   ): Promise<Array<WebSearchResult>> {
-    const response = await fetch('https://api.exa.ai/search', {
+    const response = await restFetch('https://api.exa.ai/search', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -99,11 +116,13 @@ export function createExaSearchPlugin(
   }
 
   async function initialize(cfg: Record<string, unknown>): Promise<void> {
-    // Without a key every request fails — refuse to activate so a keyless
-    // install never wins ai:web-search resolution
+    // Without a key every request fails: refuse to activate so a keyless
+    // install never wins ai:web-search resolution.
     if (String(cfg['apiKey'] ?? '').trim() === '') {
       throw new Error('Exa API key required: add it in the plugin settings')
     }
+    const refusal = exaBrowserRefusal(isCorsConstrained())
+    if (refusal) throw new Error(refusal)
     config = cfg
   }
 
