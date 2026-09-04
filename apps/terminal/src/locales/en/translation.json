@@ -958,7 +958,8 @@
     "workspaceStore": "Workspace Store",
     "signIn": "Sign in",
     "feedback": "Feedback",
-    "getDesktopApp": "Get the desktop app"
+    "getDesktopApp": "Get the desktop app",
+    "settings": "Settings"
   },
   "feedback": {
     "title": "Report a bug",

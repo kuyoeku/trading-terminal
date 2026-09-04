@@ -2021,7 +2021,8 @@
     "workspaceStore": "Workspace Store",
     "signIn": "Anmelden",
     "feedback": "Feedback",
-    "getDesktopApp": "Desktop-App holen"
+    "getDesktopApp": "Desktop-App holen",
+    "settings": "Einstellungen"
   },
   "feedback": {
     "title": "Fehler melden",

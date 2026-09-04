@@ -2021,7 +2021,8 @@
     "workspaceStore": "Tienda de espacios",
     "signIn": "Iniciar sesión",
     "feedback": "Comentarios",
-    "getDesktopApp": "Descargar la app de escritorio"
+    "getDesktopApp": "Descargar la app de escritorio",
+    "settings": "Configuración"
   },
   "feedback": {
     "title": "Reportar un error",

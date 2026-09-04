@@ -2021,7 +2021,8 @@
     "workspaceStore": "工作区商店",
     "signIn": "登录",
     "feedback": "反馈",
-    "getDesktopApp": "获取桌面应用"
+    "getDesktopApp": "获取桌面应用",
+    "settings": "设置"
   },
   "feedback": {
     "title": "报告问题",

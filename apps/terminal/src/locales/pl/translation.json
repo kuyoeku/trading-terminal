@@ -2091,7 +2091,8 @@
     "workspaceStore": "Workspace Store",
     "signIn": "Zaloguj się",
     "feedback": "Opinie",
-    "getDesktopApp": "Pobierz aplikację na komputer"
+    "getDesktopApp": "Pobierz aplikację na komputer",
+    "settings": "Ustawienia"
   },
   "feedback": {
     "title": "Zgłoś błąd",

@@ -2021,7 +2021,8 @@
     "workspaceStore": "워크스페이스 스토어",
     "signIn": "로그인",
     "feedback": "피드백",
-    "getDesktopApp": "데스크톱 앱 받기"
+    "getDesktopApp": "데스크톱 앱 받기",
+    "settings": "설정"
   },
   "feedback": {
     "title": "버그 신고",
