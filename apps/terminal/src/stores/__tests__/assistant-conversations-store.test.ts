@@ -8,6 +8,7 @@ import {
   normalizeTitle,
   titleFromText,
   trimThread,
+  uniqueMessages,
   useAssistantConversationsStore,
 } from '../assistant-conversations-store'
 
@@ -198,6 +199,36 @@ describe('ordering and caps', () => {
     expect(localStorage.getItem(`pairlens:assistant.thread.${oldest}`)).toBe(
       null,
     )
+  })
+
+  it('collapses a thread that listed the same message twice', () => {
+    const first = message('hello')
+    const second = message('there')
+    const doubled = [first, second, first, second]
+    const unique = uniqueMessages(doubled)
+    expect(unique.map((row) => row.id)).toEqual(['m-hello', 'm-there'])
+    // The later copy wins: a streamed rewrite of the same id is the one
+    // that should stay on screen, not the half-written first.
+    const older = message('hello')
+    const newer = { ...older, parts: [{ type: 'text' as const, text: 'hello!' }] }
+    expect(uniqueMessages([older, newer])[0].parts[0]).toEqual({
+      type: 'text',
+      text: 'hello!',
+    })
+    const clean = [first, second]
+    expect(uniqueMessages(clean)).toBe(clean)
+  })
+
+  it('does not write duplicate ids back to storage', () => {
+    const id = ensureActiveConversation()
+    const first = message('hello')
+    const second = message('there')
+    store().setMessages(id, [first, second, first, second])
+    useAssistantConversationsStore.setState({ threads: {} })
+    expect(store().messagesOf(id).map((row) => row.id)).toEqual([
+      'm-hello',
+      'm-there',
+    ])
   })
 
   it('trims the oldest turns past the character budget but keeps the last', () => {

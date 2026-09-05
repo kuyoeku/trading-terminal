@@ -104,6 +104,7 @@ import { generateConversationTitle } from '@/lib/assistant-core/conversation-tit
 import {
   ensureActiveConversation,
   titleFromText,
+  uniqueMessages,
   useAssistantConversationsStore,
 } from '@/stores/assistant-conversations-store'
 
@@ -316,9 +317,10 @@ function AssistantConversationInner({
       create: (id) =>
         new Chat({
           id,
-          messages:
+          messages: uniqueMessages(
             useAssistantConversationsStore.getState().threads[id] ??
-            EMPTY_THREAD,
+              EMPTY_THREAD,
+          ),
           transport,
           // ask_user and approval-gated surface actions have no execute:
           // the run parks on them and resumes by itself once every call
@@ -871,7 +873,8 @@ function AssistantMessageList({
   const { contentRef, scrollToBottom, isPinned, hasUnseen } = useStickToBottom({
     enabled: isStreaming,
   })
-  const lastId = messages[messages.length - 1]?.id
+  const thread = uniqueMessages(messages)
+  const lastId = thread[thread.length - 1]?.id
 
   // Runs after the render that added the message, so the height it scrolls
   // to already includes it. Skips the initial value so opening a thread
@@ -887,7 +890,7 @@ function AssistantMessageList({
     scrollToBottom()
   }, [jumpSignal, scrollToBottom])
 
-  if (messages.length === 0) {
+  if (thread.length === 0) {
     return (
       <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 overflow-y-auto px-5 py-6 text-center">
         <AiOrb size="46px" animationDuration={22} state="idle" />
@@ -944,7 +947,7 @@ function AssistantMessageList({
             one level up breaks the follow silently: the observer ends up on
             a flex-sized box that never changes height. */}
         <div className="flex flex-col gap-3.5 px-3 py-3" ref={contentRef}>
-          {messages.map((message) => (
+          {thread.map((message) => (
             <CopilotChatMessage
               key={message.id}
               message={message}
@@ -969,7 +972,7 @@ function AssistantMessageList({
           says which of the two situations you are in: the thread simply
           moved on without you, or something new is waiting down there. The
           second reads louder because it is the one worth interrupting for. */}
-      {!isPinned && messages.length > 0 ? (
+      {!isPinned && thread.length > 0 ? (
         <button
           type="button"
           onClick={() => scrollToBottom()}

@@ -25,6 +25,15 @@ describe('switching History does not abort a run', () => {
     expect(SOURCE).toMatch(/useChat\(\{[\s\S]*?chat,/)
   })
 
+  test('the message list collapses duplicate ids before they become React keys', () => {
+    // AI SDK message ids are 16-char generateId strings. A thread that
+    // listed the same id twice (Chat push-then-replace, a doubled persist)
+    // is exactly the "two children with the same key" warning.
+    expect(SOURCE).toContain('uniqueMessages(messages)')
+    expect(SOURCE).toMatch(/thread\.map\(\(message\) =>/)
+    expect(SOURCE).toContain('key={message.id}')
+  })
+
   test('a History click does not call stop or drop in-memory screenshots', () => {
     // The old switch effect stopped the stream, wrote the half-answer,
     // cleared chart captures, then moved threadId. Minimizing already

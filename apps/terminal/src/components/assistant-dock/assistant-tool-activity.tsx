@@ -26,6 +26,37 @@ import { formatToolLabel } from '@/lib/copilot/tool-labels'
 /** Longest JSON we will paste into a chat bubble. */
 const DETAIL_LIMIT = 2000
 
+/**
+ * Same id twice in one run is the stream rewriting a call, not two
+ * calls. Keep the last copy so the chip shows the finished state.
+ */
+function uniqueTools(
+  tools: Array<NormalizedToolPart>,
+): Array<NormalizedToolPart> {
+  const latest = new Map<string, NormalizedToolPart>()
+  let hasDup = false
+  for (const tool of tools) {
+    const id = tool.toolCallId
+    if (!id) continue
+    if (latest.has(id)) hasDup = true
+    latest.set(id, tool)
+  }
+  if (!hasDup) return tools
+  const seen = new Set<string>()
+  const out: Array<NormalizedToolPart> = []
+  for (const tool of tools) {
+    const id = tool.toolCallId
+    if (!id) {
+      out.push(tool)
+      continue
+    }
+    if (seen.has(id)) continue
+    seen.add(id)
+    out.push(latest.get(id)!)
+  }
+  return out
+}
+
 export type AssistantToolActivityProps = {
   /** A run of consecutive tool parts, in call order. */
   tools: Array<NormalizedToolPart>
@@ -37,8 +68,9 @@ export function AssistantToolActivity({
   toolLabels,
 }: AssistantToolActivityProps) {
   const { t } = useTranslation()
-  const running = tools.some((tool) => !isSettled(tool))
-  const failed = tools.filter((tool) => tool.state === 'output-error').length
+  const run = uniqueTools(tools)
+  const running = run.some((tool) => !isSettled(tool))
+  const failed = run.filter((tool) => tool.state === 'output-error').length
 
   const [open, setOpen] = useState(running)
   const touchedRef = useRef(false)
@@ -49,8 +81,8 @@ export function AssistantToolActivity({
 
   // A single call is not a group. Giving one chip a "1 tool" header and a
   // disclosure of its own would be two rows to say what one row says.
-  if (tools.length === 1) {
-    return <ToolRow tool={tools[0]} toolLabels={toolLabels} />
+  if (run.length === 1) {
+    return <ToolRow tool={run[0]} toolLabels={toolLabels} />
   }
 
   return (
@@ -79,11 +111,11 @@ export function AssistantToolActivity({
         <span className="min-w-0 flex-1 truncate">
           {running
             ? formatToolLabel(
-                lastRunning(tools)?.toolName ?? '',
+                lastRunning(run)?.toolName ?? '',
                 'running',
                 toolLabels,
               )
-            : t('copilot.toolsUsed', { count: tools.length })}
+            : t('copilot.toolsUsed', { count: run.length })}
         </span>
         {!running && failed > 0 ? (
           <span className="text-down shrink-0">
@@ -94,7 +126,7 @@ export function AssistantToolActivity({
 
       {open ? (
         <div className="flex flex-col gap-1 border-t border-[var(--ai-edge-soft)] p-1.5">
-          {tools.map((tool, index) => (
+          {run.map((tool, index) => (
             <ToolRow
               key={tool.toolCallId ?? `${tool.toolName}-${index}`}
               tool={tool}

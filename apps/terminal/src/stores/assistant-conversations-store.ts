@@ -107,11 +107,13 @@ function readThread(id: string): Array<UIMessage> {
     if (!Array.isArray(parsed)) return []
     // Anything without parts cannot be replayed into the chat, and one bad
     // row must not cost the rest of the thread.
-    return parsed.filter(
-      (message): message is UIMessage =>
-        Boolean(message) &&
-        typeof message === 'object' &&
-        Array.isArray((message as UIMessage).parts),
+    return uniqueMessages(
+      parsed.filter(
+        (message): message is UIMessage =>
+          Boolean(message) &&
+          typeof message === 'object' &&
+          Array.isArray((message as UIMessage).parts),
+      ),
     )
   } catch {
     return []
@@ -157,20 +159,49 @@ function messageChars(message: UIMessage): number {
 }
 
 /**
+ * One child per message id. A thread that listed the same id twice
+ * (a Chat that pushed then failed to replace, a sync write that
+ * concatenated) is two React children with one key, which React
+ * warns about and may drop or duplicate on the next update.
+ *
+ * First-seen order is kept so a user turn stays above its answer.
+ * The last copy of an id wins: that is the streamed rewrite, not
+ * the half-written first.
+ */
+export function uniqueMessages(messages: Array<UIMessage>): Array<UIMessage> {
+  const latest = new Map<string, UIMessage>()
+  let hasDup = false
+  for (const message of messages) {
+    if (latest.has(message.id)) hasDup = true
+    latest.set(message.id, message)
+  }
+  if (!hasDup) return messages
+  const seen = new Set<string>()
+  const out: Array<UIMessage> = []
+  for (const message of messages) {
+    if (seen.has(message.id)) continue
+    seen.add(message.id)
+    out.push(latest.get(message.id)!)
+  }
+  return out
+}
+
+/**
  * Trim a thread to the character budget, dropping the OLDEST turns. The
  * newest message always survives, whatever it weighs: a single enormous
  * answer is still the one the user is looking at.
  */
 export function trimThread(messages: Array<UIMessage>): Array<UIMessage> {
-  if (messages.length <= 1) return messages
-  const weights = messages.map(messageChars)
+  const unique = uniqueMessages(messages)
+  if (unique.length <= 1) return unique
+  const weights = unique.map(messageChars)
   let total = weights.reduce((sum, weight) => sum + weight, 0)
   let start = 0
-  while (start < messages.length - 1 && total > MAX_THREAD_CHARS) {
+  while (start < unique.length - 1 && total > MAX_THREAD_CHARS) {
     total -= weights[start]
     start += 1
   }
-  return start === 0 ? messages : messages.slice(start)
+  return start === 0 ? unique : unique.slice(start)
 }
 
 /**
