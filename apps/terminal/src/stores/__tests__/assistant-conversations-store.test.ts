@@ -210,7 +210,10 @@ describe('ordering and caps', () => {
     // The later copy wins: a streamed rewrite of the same id is the one
     // that should stay on screen, not the half-written first.
     const older = message('hello')
-    const newer = { ...older, parts: [{ type: 'text' as const, text: 'hello!' }] }
+    const newer = {
+      ...older,
+      parts: [{ type: 'text' as const, text: 'hello!' }],
+    }
     expect(uniqueMessages([older, newer])[0].parts[0]).toEqual({
       type: 'text',
       text: 'hello!',
@@ -225,10 +228,11 @@ describe('ordering and caps', () => {
     const second = message('there')
     store().setMessages(id, [first, second, first, second])
     useAssistantConversationsStore.setState({ threads: {} })
-    expect(store().messagesOf(id).map((row) => row.id)).toEqual([
-      'm-hello',
-      'm-there',
-    ])
+    expect(
+      store()
+        .messagesOf(id)
+        .map((row) => row.id),
+    ).toEqual(['m-hello', 'm-there'])
   })
 
   it('trims the oldest turns past the character budget but keeps the last', () => {
