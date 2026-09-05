@@ -10,6 +10,7 @@ import {
   Loader2,
   MessageCircle,
   Send,
+  Smartphone,
   Trash2,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -20,11 +21,22 @@ import { Input } from '@pairlens/ui/components/ui/input'
 import type { TFunction } from 'i18next'
 import type { TelegramChat } from '@/lib/notifications/telegram'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
+import { useBarkConnection } from '@/hooks/use-bark-connection'
 import { useSystemNotificationPermission } from '@/hooks/use-system-notification-permission'
 import { useTelegramConnection } from '@/hooks/use-telegram-connection'
 import { isStandalone } from '@/lib/platform'
+import { reloadForGrants } from '@/lib/plugins/network-grants'
 import { sendOsNotification } from '@/lib/notifications/platform-notify'
 import { isVaultEnrollmentRequired } from '@/lib/security/vault/vault-errors'
+import {
+  BarkApiError,
+  connectBark,
+  disconnectBark,
+  formatBarkPayload,
+  parseBarkEndpoint,
+  readBarkDeviceKey,
+  sendBarkPush,
+} from '@/lib/notifications/bark'
 import {
   TelegramApiError,
   connectTelegramBot,
@@ -82,12 +94,12 @@ function describeError(
 /**
  * Notification delivery settings.
  *
- * Telegram is the only thing here so far, and it is here rather than on the
- * notifications canvas for one reason: the bot token is a credential. It goes
- * to the keychain next to the exchange keys, so it belongs on the same kind of
- * surface as those — a place where connecting and revoking are both obvious —
- * rather than in a node's config panel where it would look like rule data and
- * get synced like rule data.
+ * Telegram and Bark live here rather than on the notifications canvas for
+ * one reason: the bot token and the device key are credentials. They go to
+ * the keychain next to the exchange keys, so they belong on the same kind of
+ * surface as those: a place where connecting and revoking are both obvious,
+ * rather than in a node's config panel where they would look like rule data
+ * and get synced like rule data.
  */
 export function NotificationsSection() {
   const { t } = useTranslation()
@@ -128,6 +140,8 @@ export function NotificationsSection() {
           {t('settings.notifications.telegram.privacyNote')}
         </p>
       </section>
+
+      <BarkCard />
     </div>
   )
 }
@@ -689,6 +703,302 @@ function ChatLink({
           ))}
         </div>
       )}
+    </div>
+  )
+}
+
+// ── Bark ─────────────────────────────────────────────────────────────
+
+function describeBarkError(
+  error: unknown,
+  t: TFunction,
+  fallbackKey: 'connectFailed' | 'testFailed',
+): string {
+  if (error instanceof BarkApiError) {
+    const key =
+      error.code === 400 || error.code === 404
+        ? 'errorNotFound'
+        : error.code === 401 || error.code === 403
+          ? 'errorUnauthorized'
+          : error.code === 429
+            ? 'errorRateLimited'
+            : null
+    if (key) return t(`settings.notifications.bark.${key}`)
+    return error.description
+  }
+  if (error instanceof TypeError) {
+    return t('settings.notifications.bark.errorServer')
+  }
+  if (error instanceof Error) return error.message
+  return t(`settings.notifications.bark.${fallbackKey}`)
+}
+
+function BarkCard() {
+  const { t } = useTranslation()
+  const connection = useBarkConnection()
+
+  return (
+    <section className="rounded-xl border p-4">
+      <div className="flex items-start gap-3">
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+          <Smartphone className="size-4 text-primary" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-medium">
+            {t('settings.notifications.bark.title')}
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t('settings.notifications.bark.description')}
+          </p>
+          <p className="mt-1.5 text-xs text-muted-foreground">
+            {t('settings.notifications.bark.runningNote')}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        {connection ? <BarkConnectedCard /> : <BarkConnectForm />}
+      </div>
+
+      <p className="mt-4 border-t pt-3 text-xs text-muted-foreground">
+        {t('settings.notifications.bark.privacyNote')}
+      </p>
+    </section>
+  )
+}
+
+function BarkConnectForm() {
+  const { t } = useTranslation()
+  const [url, setUrl] = React.useState('')
+  const [busy, setBusy] = React.useState(false)
+  const [feedback, setFeedback] = React.useState<Feedback>(null)
+  const [needsReload, setNeedsReload] = React.useState(false)
+  const [enrollOpen, setEnrollOpen] = React.useState(false)
+  const pendingAction = React.useRef<(() => void) | null>(null)
+
+  const handleConnect = async () => {
+    const trimmed = url.trim()
+    if (!parseBarkEndpoint(trimmed)) {
+      setFeedback({
+        type: 'error',
+        message: t('settings.notifications.bark.invalidUrl'),
+      })
+      return
+    }
+
+    setBusy(true)
+    setFeedback(null)
+    setNeedsReload(false)
+    try {
+      const { grant } = await connectBark(trimmed)
+      setUrl('')
+      if (grant === 'reload-needed') {
+        setNeedsReload(true)
+        setFeedback({
+          type: 'success',
+          message: t('settings.notifications.bark.reloadForGrant'),
+        })
+      }
+    } catch (error) {
+      if (isVaultEnrollmentRequired(error)) {
+        pendingAction.current = () => void handleConnect()
+        setEnrollOpen(true)
+        return
+      }
+      setFeedback({
+        type: 'error',
+        message: describeBarkError(error, t, 'connectFailed'),
+      })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const steps = [
+    t('settings.notifications.bark.setup.step1'),
+    t('settings.notifications.bark.setup.step2'),
+    t('settings.notifications.bark.setup.step3'),
+  ]
+
+  return (
+    <div className="space-y-4">
+      <ol className="space-y-2">
+        {steps.map((step, index) => (
+          <li key={step} className="flex gap-2.5 text-sm">
+            <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-muted text-[11px] font-medium text-muted-foreground">
+              {index + 1}
+            </span>
+            <span className="text-muted-foreground">{step}</span>
+          </li>
+        ))}
+      </ol>
+
+      <a
+        href="https://apps.apple.com/app/bark-customed-notifications/id1403753865"
+        target="_blank"
+        rel="noreferrer noopener"
+        className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+      >
+        {t('settings.notifications.bark.openBark')}
+        <ExternalLink className="size-3.5" />
+      </a>
+
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Input
+          type="password"
+          autoComplete="off"
+          spellCheck={false}
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder={t('settings.notifications.bark.urlPlaceholder')}
+          className="font-mono text-xs max-md:text-[16px]"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !busy) void handleConnect()
+          }}
+        />
+        <Button
+          onClick={() => void handleConnect()}
+          disabled={busy || url.trim() === ''}
+          className="shrink-0"
+        >
+          {busy && <Loader2 className="size-4 animate-spin" />}
+          {t('settings.notifications.bark.connect')}
+        </Button>
+      </div>
+
+      <FeedbackLine feedback={feedback} />
+
+      {needsReload && (
+        <Button size="sm" variant="outline" onClick={() => reloadForGrants()}>
+          {t('settings.notifications.bark.reloadNow')}
+        </Button>
+      )}
+
+      <VaultEnrollmentDialog
+        open={enrollOpen}
+        onOpenChange={setEnrollOpen}
+        onEnrolled={() => {
+          const resume = pendingAction.current
+          pendingAction.current = null
+          resume?.()
+        }}
+      />
+    </div>
+  )
+}
+
+function BarkConnectedCard() {
+  const { t } = useTranslation()
+  const connection = useBarkConnection()
+  const [feedback, setFeedback] = React.useState<Feedback>(null)
+  const [busy, setBusy] = React.useState<'test' | 'disconnect' | null>(null)
+
+  if (!connection) return null
+
+  let host = connection.origin
+  try {
+    host = new URL(connection.origin).hostname
+  } catch {
+    // Keep the stored origin if it is somehow not a URL.
+  }
+
+  const handleTest = async () => {
+    setBusy('test')
+    setFeedback(null)
+    try {
+      const deviceKey = await readBarkDeviceKey()
+      if (!deviceKey) {
+        setFeedback({
+          type: 'error',
+          message: t('settings.notifications.bark.connectFailed'),
+        })
+        return
+      }
+      await sendBarkPush(
+        connection.origin,
+        deviceKey,
+        formatBarkPayload({
+          ruleId: 'test',
+          ruleName: t('settings.notifications.bark.testRuleName'),
+          title: t('settings.notifications.bark.testTitle'),
+          body: t('settings.notifications.bark.testBody'),
+          severity: 'success',
+          timestamp: Date.now(),
+          payload: { eventType: 'test', timestamp: Date.now(), data: {} },
+        }),
+      )
+      setFeedback({
+        type: 'success',
+        message: t('settings.notifications.bark.testSent'),
+      })
+    } catch (error) {
+      setFeedback({
+        type: 'error',
+        message: describeBarkError(error, t, 'testFailed'),
+      })
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  const handleDisconnect = async () => {
+    setBusy('disconnect')
+    setFeedback(null)
+    try {
+      await disconnectBark()
+    } catch (error) {
+      setFeedback({
+        type: 'error',
+        message: t('settings.notifications.bark.disconnectFailed'),
+      })
+      console.warn('[bark] disconnect failed:', error)
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-3 rounded-lg border bg-muted/40 px-3 py-2.5">
+        <Check className="size-4 shrink-0 text-emerald-500" />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium">
+            {t('settings.notifications.bark.title')}
+          </p>
+          <p className="truncate font-mono text-xs text-muted-foreground">
+            {t('settings.notifications.bark.connectedTo', { host })}
+          </p>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => void handleDisconnect()}
+          disabled={busy !== null}
+        >
+          {busy === 'disconnect' ? (
+            <Loader2 className="size-3.5 animate-spin" />
+          ) : (
+            <Trash2 className="size-3.5" />
+          )}
+          {t('settings.notifications.bark.disconnect')}
+        </Button>
+      </div>
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => void handleTest()}
+        disabled={busy !== null}
+      >
+        {busy === 'test' ? (
+          <Loader2 className="size-3.5 animate-spin" />
+        ) : (
+          <Smartphone className="size-3.5" />
+        )}
+        {t('settings.notifications.bark.sendTest')}
+      </Button>
+
+      <FeedbackLine feedback={feedback} />
     </div>
   )
 }

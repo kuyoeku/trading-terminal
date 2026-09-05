@@ -4,8 +4,8 @@ description: 'Every setting in the terminal, and the three worth visiting first:
 group: traders
 order: 10
 eyebrow: For traders
-updated: 4 SEP 2026
-readTime: 11 min read
+updated: 5 SEP 2026
+readTime: 12 min read
 ---
 
 Open settings with <kbd>⌘,</kbd>, from the gear at the bottom of the left
@@ -369,7 +369,14 @@ points you at the padlock in the address bar. Test one from here.
 Connect a Telegram bot here (paste the token BotFather gives you, press Start
 in the bot, link the chat) and any alert can then deliver to it. The bot token is stored like an exchange key: OS
 keychain on desktop, encrypted vault in the browser, never on a Pairlens
-server. Full walkthrough in
+server.
+
+Connect Bark the same way: paste the URL the Bark app shows you
+(`https://api.day.app/…`, or your own server) and any alert can push to that
+iPhone. The device key is stored like the Telegram token, never on a Pairlens
+server.
+
+Full walkthrough in
 [Alerts and notifications](/docs/alerts-notifications).
 
 The rules themselves live under **Notifications** in the left nav.

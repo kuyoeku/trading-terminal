@@ -6,6 +6,7 @@ import {
   registerStepType,
 } from '@pairlens/notification-engine/step-registry'
 import { sendOsNotification } from './platform-notify'
+import { deliverBarkNotification } from './bark'
 import { deliverTelegramNotification } from './telegram'
 import type { NotificationMessage } from '@pairlens/notification-engine/types'
 import { isStandalone } from '@/lib/platform'
@@ -117,6 +118,15 @@ export function registerChannelDeliveries(): void {
     registerStepType({
       ...telegramDef,
       deliver: deliverTelegramNotification,
+    })
+  }
+
+  // Bark — device key comes from the keychain, never from the step (bark.ts)
+  const barkDef = getStepType('bark')
+  if (barkDef) {
+    registerStepType({
+      ...barkDef,
+      deliver: deliverBarkNotification,
     })
   }
 }

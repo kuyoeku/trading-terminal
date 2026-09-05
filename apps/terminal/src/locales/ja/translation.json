@@ -1876,7 +1876,7 @@
         "enable": "有効にする",
         "blockedHelpBrowser": "ブラウザーがこのサイトの通知をブロックしています。アドレスバー横の鍵アイコンから許可して、戻ってきてください。",
         "blockedHelpDesktop": "システムがPairlensの通知をブロックしています。OSの通知設定で許可してください。",
-        "unsupportedHelp": "このブラウザーはシステム通知を表示できません。アラートはアプリ内トーストとして届き、Telegramはいずれの場合も動作します。",
+        "unsupportedHelp": "このブラウザーはシステム通知を表示できません。アラートはアプリ内トーストとして届き、TelegramとBarkはいずれの場合も動作します。",
         "sendTest": "テスト通知を送信",
         "testTitle": "Pairlens",
         "testBody": "アラートはこのように表示されます。",
@@ -1924,6 +1924,37 @@
         "testRuleName": "テスト",
         "testTitle": "Pairlensが接続されました",
         "testBody": "通知フローのアラートはここに届きます。"
+      },
+      "bark": {
+        "title": "Bark",
+        "description": "iPhoneのBarkアプリにアラートを送り、ターミナルを見ていないときにも届くようにします。",
+        "runningNote": "アラートはPairlensが起動している間だけ発火します。デスクトップではウィンドウを閉じたあともバックグラウンドで動き続けられます。",
+        "privacyNote": "デバイスキーはこの端末にだけ残ります。デスクトップではOSのキーチェーン、ブラウザーでは暗号化ボールトです。Pairlensに送られることはありません。",
+        "setup": {
+          "step1": "App StoreからBarkを入れて開きます。",
+          "step2": "Barkは https://api.day.app/xxxxxxxx/ のようなURLを表示します。",
+          "step3": "そのURLを下に貼り付けます。セルフホストのサーバーURLも同じです。"
+        },
+        "openBark": "App StoreのBark",
+        "urlPlaceholder": "https://api.day.app/your-key/",
+        "connect": "接続",
+        "invalidUrl": "それはBarkのURLではありません。Barkが表示するアドレスか、デバイスキーだけを貼り付けてください。",
+        "connectFailed": "Barkを接続できませんでした。",
+        "errorUnauthorized": "Barkがそのデバイスキーを拒否しました。アプリからURLを全部コピーしたか確認してください。",
+        "errorNotFound": "そのBarkサーバーはデバイスキーを認識しませんでした。",
+        "errorRateLimited": "Barkがこのキーを制限しています。少し待ってから再試行してください。",
+        "errorServer": "Barkサーバーに届きませんでした。URLを確認するか、もう一度試してください。",
+        "disconnect": "切断",
+        "disconnectFailed": "Barkを切断できませんでした。",
+        "connectedTo": "{{host}} へ送信",
+        "sendTest": "テスト通知を送る",
+        "testSent": "テスト通知を送りました。",
+        "testFailed": "テスト通知を送れませんでした。",
+        "testRuleName": "テスト",
+        "testTitle": "Pairlensが接続されました",
+        "testBody": "通知フローのアラートはここに届きます。",
+        "reloadForGrant": "デスクトップはそのBarkサーバーに届く前に再読み込みが必要です。再読み込みしてからテストを送ってください。",
+        "reloadNow": "今すぐ再読み込み"
       }
     },
     "security": {
@@ -5343,6 +5374,11 @@
         },
         "percentMove": {
           "title": "価格の変動"
+        },
+        "bark": {
+          "title": "Bark",
+          "notConnected": "設定でBarkを接続すると、iPhoneにアラートを送れます。",
+          "connect": "Barkを接続"
         }
       }
     },
@@ -5409,6 +5445,9 @@
       },
       "percent-move": {
         "label": "価格の変動"
+      },
+      "bark": {
+        "label": "Bark"
       }
     },
     "messages": {
@@ -5513,7 +5552,8 @@
             "1": "5m〜24h"
           }
         }
-      }
+      },
+      "channelBark": "Bark"
     },
     "bell": {
       "tabArmed": "稼働中",

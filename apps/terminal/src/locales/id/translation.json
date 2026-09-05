@@ -1876,7 +1876,7 @@
         "enable": "Aktifkan",
         "blockedHelpBrowser": "Peramban Anda memblokir notifikasi untuk situs ini. Izinkan lewat ikon gembok di sebelah bilah alamat, lalu kembali ke sini.",
         "blockedHelpDesktop": "Sistem Anda memblokir notifikasi Pairlens. Izinkan di pengaturan notifikasi sistem operasi.",
-        "unsupportedHelp": "Peramban ini tidak bisa menampilkan notifikasi sistem. Peringatan tetap datang sebagai toast di dalam aplikasi, dan Telegram tetap berfungsi.",
+        "unsupportedHelp": "Peramban ini tidak bisa menampilkan notifikasi sistem. Peringatan tetap datang sebagai toast di dalam aplikasi, dan Telegram serta Bark tetap berfungsi.",
         "sendTest": "Kirim notifikasi uji",
         "testTitle": "Pairlens",
         "testBody": "Beginilah tampilan sebuah peringatan.",
@@ -1924,6 +1924,37 @@
         "testRuleName": "Uji",
         "testTitle": "Pairlens terhubung",
         "testBody": "Peringatan dari alur notifikasi Anda akan tiba di sini."
+      },
+      "bark": {
+        "title": "Bark",
+        "description": "Kirim peringatan ke aplikasi Bark di iPhone, supaya sampai saat Anda tidak sedang melihat terminal.",
+        "runningNote": "Peringatan hanya terpicu saat Pairlens berjalan. Di desktop ia bisa terus berjalan di latar belakang setelah jendela ditutup.",
+        "privacyNote": "Kunci perangkat tetap di perangkat ini: keychain sistem di desktop, brankas terenkripsi di peramban. Tidak pernah dikirim ke Pairlens.",
+        "setup": {
+          "step1": "Pasang Bark dari App Store lalu buka.",
+          "step2": "Bark menampilkan URL seperti https://api.day.app/xxxxxxxx/.",
+          "step3": "Tempel di bawah. URL server swasta juga berlaku."
+        },
+        "openBark": "Bark di App Store",
+        "urlPlaceholder": "https://api.day.app/your-key/",
+        "connect": "Hubungkan",
+        "invalidUrl": "Itu bukan URL Bark. Tempel alamat yang ditampilkan Bark, atau hanya kunci perangkat.",
+        "connectFailed": "Tidak bisa menghubungkan Bark.",
+        "errorUnauthorized": "Bark menolak kunci itu. Pastikan Anda menyalin seluruh URL dari aplikasi.",
+        "errorNotFound": "Server Bark itu tidak mengenali kunci perangkat.",
+        "errorRateLimited": "Bark sedang membatasi kunci ini. Tunggu sebentar lalu coba lagi.",
+        "errorServer": "Tidak bisa menjangkau server Bark. Periksa URL atau coba lagi.",
+        "disconnect": "Putuskan",
+        "disconnectFailed": "Tidak bisa memutus Bark.",
+        "connectedTo": "Mengirim ke {{host}}",
+        "sendTest": "Kirim notifikasi uji",
+        "testSent": "Notifikasi uji terkirim.",
+        "testFailed": "Tidak bisa mengirim notifikasi uji.",
+        "testRuleName": "Uji",
+        "testTitle": "Pairlens terhubung",
+        "testBody": "Peringatan dari alur notifikasi akan sampai di sini.",
+        "reloadForGrant": "Desktop perlu dimuat ulang sebelum bisa menjangkau server Bark itu. Muat ulang, lalu kirim uji.",
+        "reloadNow": "Muat ulang sekarang"
       }
     },
     "security": {
@@ -5343,6 +5374,11 @@
         },
         "percentMove": {
           "title": "Pergerakan Harga"
+        },
+        "bark": {
+          "title": "Bark",
+          "notConnected": "Hubungkan Bark di Pengaturan untuk mengirim peringatan ke iPhone.",
+          "connect": "Hubungkan Bark"
         }
       }
     },
@@ -5409,6 +5445,9 @@
       },
       "percent-move": {
         "label": "Pergerakan Harga"
+      },
+      "bark": {
+        "label": "Bark"
       }
     },
     "messages": {
@@ -5513,7 +5552,8 @@
             "1": "5m sampai 24h"
           }
         }
-      }
+      },
+      "channelBark": "Bark"
     },
     "bell": {
       "tabArmed": "Aktif",

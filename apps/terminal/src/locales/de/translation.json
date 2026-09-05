@@ -1876,7 +1876,7 @@
         "enable": "Aktivieren",
         "blockedHelpBrowser": "Dein Browser blockiert Benachrichtigungen für diese Seite. Erlaube sie über das Schloss neben der Adressleiste und komm zurück.",
         "blockedHelpDesktop": "Dein System blockiert Benachrichtigungen für Pairlens. Erlaube sie in den Benachrichtigungseinstellungen des Betriebssystems.",
-        "unsupportedHelp": "Dieser Browser kann keine Systembenachrichtigungen anzeigen. Alarme kommen weiterhin als Toast in der App, und Telegram funktioniert ohnehin.",
+        "unsupportedHelp": "Dieser Browser kann keine Systembenachrichtigungen anzeigen. Alarme kommen weiterhin als Toast in der App, und Telegram und Bark funktionieren ohnehin.",
         "sendTest": "Testbenachrichtigung senden",
         "testTitle": "Pairlens",
         "testBody": "So wird ein Alarm aussehen.",
@@ -1924,6 +1924,37 @@
         "testRuleName": "Test",
         "testTitle": "Pairlens ist verbunden",
         "testBody": "Alarme aus deinen Benachrichtigungs-Flows kommen hier an."
+      },
+      "bark": {
+        "title": "Bark",
+        "description": "Sende Alarme an die Bark-App auf deinem iPhone, damit sie dich erreichen, wenn du nicht auf das Terminal schaust.",
+        "runningNote": "Alarme lösen nur aus, solange Pairlens läuft. Auf dem Desktop kann es nach dem Schließen des Fensters im Hintergrund weiterlaufen.",
+        "privacyNote": "Der Geräteschlüssel bleibt auf diesem Gerät: in der System-Schlüsselbund-App auf dem Desktop, im verschlüsselten Tresor im Browser. Er wird nie an Pairlens gesendet.",
+        "setup": {
+          "step1": "Installiere Bark aus dem App Store und öffne es.",
+          "step2": "Bark zeigt eine URL wie https://api.day.app/xxxxxxxx/.",
+          "step3": "Füge sie unten ein. Eine selbst gehostete Server-URL funktioniert genauso."
+        },
+        "openBark": "Bark im App Store",
+        "urlPlaceholder": "https://api.day.app/your-key/",
+        "connect": "Verbinden",
+        "invalidUrl": "Das ist keine Bark-URL. Füge die Adresse ein, die Bark anzeigt, oder nur den Geräteschlüssel.",
+        "connectFailed": "Bark konnte nicht verbunden werden.",
+        "errorUnauthorized": "Bark hat diesen Schlüssel abgelehnt. Prüfe, ob du die ganze URL aus der App kopiert hast.",
+        "errorNotFound": "Dieser Bark-Server kennt den Geräteschlüssel nicht.",
+        "errorRateLimited": "Bark begrenzt diesen Schlüssel. Warte einen Moment und versuche es erneut.",
+        "errorServer": "Der Bark-Server war nicht erreichbar. Prüfe die URL oder versuche es erneut.",
+        "disconnect": "Trennen",
+        "disconnectFailed": "Bark konnte nicht getrennt werden.",
+        "connectedTo": "Push an {{host}}",
+        "sendTest": "Testbenachrichtigung senden",
+        "testSent": "Testbenachrichtigung gesendet.",
+        "testFailed": "Die Testbenachrichtigung konnte nicht gesendet werden.",
+        "testRuleName": "Test",
+        "testTitle": "Pairlens ist verbunden",
+        "testBody": "Alarme aus deinen Benachrichtigungsflüssen kommen hier an.",
+        "reloadForGrant": "Der Desktop muss neu geladen werden, bevor er diesen Bark-Server erreichen kann. Neu laden, dann einen Test senden.",
+        "reloadNow": "Jetzt neu laden"
       }
     },
     "security": {
@@ -5343,6 +5374,11 @@
         },
         "percentMove": {
           "title": "Preisbewegung"
+        },
+        "bark": {
+          "title": "Bark",
+          "notConnected": "Verbinde Bark in den Einstellungen, um Alarme auf dein iPhone zu senden.",
+          "connect": "Bark verbinden"
         }
       }
     },
@@ -5409,6 +5445,9 @@
       },
       "percent-move": {
         "label": "Preisbewegung"
+      },
+      "bark": {
+        "label": "Bark"
       }
     },
     "messages": {
@@ -5513,7 +5552,8 @@
             "1": "5m bis 24h"
           }
         }
-      }
+      },
+      "channelBark": "Bark"
     },
     "bell": {
       "tabArmed": "Aktiv",

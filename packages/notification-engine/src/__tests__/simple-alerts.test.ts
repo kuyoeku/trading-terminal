@@ -33,7 +33,7 @@ const LEVEL: SimpleAlertSpec = {
   kind: 'price-level',
   direction: 'above',
   price: 100000,
-  channels: { toast: true, os: true, telegram: false },
+  channels: { toast: true, os: true, telegram: false, bark: false },
 }
 
 const MOVE: SimpleAlertSpec = {
@@ -41,7 +41,7 @@ const MOVE: SimpleAlertSpec = {
   direction: 'down',
   percent: 5,
   window: '1h',
-  channels: { toast: false, os: true, telegram: true },
+  channels: { toast: false, os: true, telegram: true, bark: false },
 }
 
 function ruleFor(spec: SimpleAlertSpec): NotificationRuleDSL {
@@ -70,16 +70,19 @@ describe('simple alert round trip', () => {
     for (const toast of [true, false]) {
       for (const os of [true, false]) {
         for (const telegram of [true, false]) {
-          if (!toast && !os && !telegram) continue // no channel = not a rule
-          const spec: SimpleAlertSpec = {
-            ...LEVEL,
-            channels: { toast, os, telegram },
+          for (const bark of [true, false]) {
+            if (!toast && !os && !telegram && !bark) continue
+            const spec: SimpleAlertSpec = {
+              ...LEVEL,
+              channels: { toast, os, telegram, bark },
+            }
+            expect(readSimpleAlert(ruleFor(spec))?.channels).toEqual({
+              toast,
+              os,
+              telegram,
+              bark,
+            })
           }
-          expect(readSimpleAlert(ruleFor(spec))?.channels).toEqual({
-            toast,
-            os,
-            telegram,
-          })
         }
       }
     }

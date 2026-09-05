@@ -1876,7 +1876,7 @@
         "enable": "Bật",
         "blockedHelpBrowser": "Trình duyệt đang chặn thông báo cho trang này. Hãy cho phép từ biểu tượng ổ khóa cạnh thanh địa chỉ rồi quay lại.",
         "blockedHelpDesktop": "Hệ thống đang chặn thông báo của Pairlens. Hãy cho phép trong cài đặt thông báo của hệ điều hành.",
-        "unsupportedHelp": "Trình duyệt này không hiển thị được thông báo hệ thống. Cảnh báo vẫn đến dưới dạng toast trong ứng dụng, và Telegram vẫn hoạt động bình thường.",
+        "unsupportedHelp": "Trình duyệt này không hiển thị được thông báo hệ thống. Cảnh báo vẫn đến dưới dạng toast trong ứng dụng, và Telegram cùng Bark vẫn hoạt động bình thường.",
         "sendTest": "Gửi thông báo thử",
         "testTitle": "Pairlens",
         "testBody": "Cảnh báo sẽ trông như thế này.",
@@ -1924,6 +1924,37 @@
         "testRuleName": "Thử",
         "testTitle": "Pairlens đã kết nối",
         "testBody": "Cảnh báo từ các luồng thông báo của bạn sẽ đến đây."
+      },
+      "bark": {
+        "title": "Bark",
+        "description": "Gửi cảnh báo tới ứng dụng Bark trên iPhone, để chúng tới khi bạn không nhìn terminal.",
+        "runningNote": "Cảnh báo chỉ kích hoạt khi Pairlens đang chạy. Trên desktop nó có thể chạy nền sau khi bạn đóng cửa sổ.",
+        "privacyNote": "Khóa thiết bị ở lại trên máy này: keychain hệ thống trên desktop, kho mã hóa trong trình duyệt. Không bao giờ gửi tới Pairlens.",
+        "setup": {
+          "step1": "Cài Bark từ App Store rồi mở.",
+          "step2": "Bark hiện URL dạng https://api.day.app/xxxxxxxx/.",
+          "step3": "Dán URL đó bên dưới. URL máy chủ tự host cũng dùng được."
+        },
+        "openBark": "Bark trên App Store",
+        "urlPlaceholder": "https://api.day.app/your-key/",
+        "connect": "Kết nối",
+        "invalidUrl": "Đó không phải URL Bark. Dán địa chỉ Bark hiện, hoặc chỉ khóa thiết bị.",
+        "connectFailed": "Không kết nối được Bark.",
+        "errorUnauthorized": "Bark từ chối khóa đó. Kiểm tra bạn đã sao chép hết URL từ ứng dụng.",
+        "errorNotFound": "Máy chủ Bark đó không nhận khóa thiết bị.",
+        "errorRateLimited": "Bark đang giới hạn khóa này. Đợi một lúc rồi thử lại.",
+        "errorServer": "Không tới được máy chủ Bark. Kiểm tra URL hoặc thử lại.",
+        "disconnect": "Ngắt kết nối",
+        "disconnectFailed": "Không ngắt được Bark.",
+        "connectedTo": "Đẩy tới {{host}}",
+        "sendTest": "Gửi thông báo thử",
+        "testSent": "Đã gửi thông báo thử.",
+        "testFailed": "Không gửi được thông báo thử.",
+        "testRuleName": "Thử",
+        "testTitle": "Pairlens đã kết nối",
+        "testBody": "Cảnh báo từ luồng thông báo sẽ tới đây.",
+        "reloadForGrant": "Desktop cần tải lại trước khi tới được máy chủ Bark đó. Tải lại, rồi gửi thử.",
+        "reloadNow": "Tải lại ngay"
       }
     },
     "security": {
@@ -5343,6 +5374,11 @@
         },
         "percentMove": {
           "title": "Biến động giá"
+        },
+        "bark": {
+          "title": "Bark",
+          "notConnected": "Kết nối Bark trong Cài đặt để gửi cảnh báo tới iPhone.",
+          "connect": "Kết nối Bark"
         }
       }
     },
@@ -5409,6 +5445,9 @@
       },
       "percent-move": {
         "label": "Biến động giá"
+      },
+      "bark": {
+        "label": "Bark"
       }
     },
     "messages": {
@@ -5513,7 +5552,8 @@
             "1": "Từ 5m đến 24h"
           }
         }
-      }
+      },
+      "channelBark": "Bark"
     },
     "bell": {
       "tabArmed": "Đang bật",

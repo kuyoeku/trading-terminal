@@ -813,7 +813,7 @@
         "enable": "Enable",
         "blockedHelpBrowser": "Your browser is blocking notifications for this site. Allow them from the padlock next to the address bar, then come back.",
         "blockedHelpDesktop": "Your system is blocking notifications for Pairlens. Allow them in your operating system's notification settings.",
-        "unsupportedHelp": "This browser cannot show system notifications. Alerts still arrive as in-app toasts, and Telegram works either way.",
+        "unsupportedHelp": "This browser cannot show system notifications. Alerts still arrive as in-app toasts, and Telegram and Bark work either way.",
         "sendTest": "Send test notification",
         "testTitle": "Pairlens",
         "testBody": "This is what an alert will look like.",
@@ -861,6 +861,37 @@
         "testRuleName": "Test",
         "testTitle": "Pairlens is connected",
         "testBody": "Alerts from your notification flows will arrive here."
+      },
+      "bark": {
+        "title": "Bark",
+        "description": "Send alerts to the Bark app on your iPhone, so they reach you when you are not watching the terminal.",
+        "runningNote": "Alerts only fire while Pairlens is running. On desktop it can keep running in the background after you close the window.",
+        "privacyNote": "The device key stays on this device: in the OS keychain on desktop, in your encrypted vault in the browser. It is never sent to Pairlens.",
+        "setup": {
+          "step1": "Install Bark from the App Store and open it.",
+          "step2": "Bark shows a URL that looks like https://api.day.app/xxxxxxxx/.",
+          "step3": "Paste that URL below. A self-hosted server URL works the same way."
+        },
+        "openBark": "Bark on the App Store",
+        "urlPlaceholder": "https://api.day.app/your-key/",
+        "connect": "Connect",
+        "invalidUrl": "That is not a Bark URL. Paste the address Bark shows you, or just the device key.",
+        "connectFailed": "Could not connect Bark.",
+        "errorUnauthorized": "Bark rejected that device key. Check you copied the whole URL from the app.",
+        "errorNotFound": "That Bark server did not recognise the device key.",
+        "errorRateLimited": "Bark is rate-limiting this key. Wait a moment and try again.",
+        "errorServer": "Could not reach the Bark server. Check the URL, or try again.",
+        "disconnect": "Disconnect",
+        "disconnectFailed": "Could not disconnect Bark.",
+        "connectedTo": "Pushing to {{host}}",
+        "sendTest": "Send test notification",
+        "testSent": "Test notification sent.",
+        "testFailed": "Could not send the test notification.",
+        "testRuleName": "Test",
+        "testTitle": "Pairlens is connected",
+        "testBody": "Alerts from your notification flows will arrive here.",
+        "reloadForGrant": "Desktop needs a reload before it can reach that Bark server. Reload, then send a test.",
+        "reloadNow": "Reload now"
       }
     },
     "security": {
@@ -4347,6 +4378,11 @@
           "notConnected": "Connect a bot in Settings to send alerts to Telegram.",
           "connect": "Connect Telegram"
         },
+        "bark": {
+          "title": "Bark",
+          "notConnected": "Connect Bark in Settings to send alerts to your iPhone.",
+          "connect": "Connect Bark"
+        },
         "timeWindow": {
           "title": "Time Window",
           "start": "Start (UTC)",
@@ -4417,6 +4453,9 @@
       },
       "telegram": {
         "label": "Telegram"
+      },
+      "bark": {
+        "label": "Bark"
       },
       "percent-move": {
         "label": "Price Move"
@@ -4492,6 +4531,7 @@
       "channelToast": "In-app",
       "channelOs": "Desktop",
       "channelTelegram": "Telegram",
+      "channelBark": "Bark",
       "osBlocked": "Your system is blocking notifications from Pairlens.",
       "create": "Create alert",
       "created": "Alert armed on {{pair}}",

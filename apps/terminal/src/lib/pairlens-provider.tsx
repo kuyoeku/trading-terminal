@@ -749,6 +749,11 @@ const FIRST_PARTY_NOTIFICATION_COMPONENTS: Record<
         default: m.TelegramStep,
       })),
     ),
+    bark: lazyChunk(() =>
+      import('@/components/notifications/steps/bark-step').then((m) => ({
+        default: m.BarkStep,
+      })),
+    ),
   },
 }
 

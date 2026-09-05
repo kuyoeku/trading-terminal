@@ -378,8 +378,9 @@ describe('simple alerts', () => {
     const binding = state.bindings.find((b) => b.ruleId === result.ruleId)!
     expect(binding.pair).toBe('BTC-USDT')
     expect(binding.enabled).toBe(true)
-    // Telegram needs a bot token the assistant cannot see, so it stays off.
+    // Telegram and Bark need credentials the assistant cannot see, so they stay off.
     expect(rule.steps.some((step) => step.type === 'telegram')).toBe(false)
+    expect(rule.steps.some((step) => step.type === 'bark')).toBe(false)
   })
 
   test('rejects venues the terminal does not have', async () => {

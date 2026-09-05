@@ -394,6 +394,12 @@ const channelsSchema = z
       .describe(
         'Only when the user asked for Telegram AND has connected a bot token in Settings',
       ),
+    bark: z
+      .boolean()
+      .default(false)
+      .describe(
+        'Only when the user asked for Bark AND has connected a device key in Settings',
+      ),
   })
   .describe('Where the alert is delivered. Defaults are in-app plus OS.')
 
@@ -413,7 +419,12 @@ const simpleAlertSchema = z.discriminatedUnion('kind', [
   }),
 ])
 
-const DEFAULT_CHANNELS = { toast: true, os: true, telegram: false }
+const DEFAULT_CHANNELS = {
+  toast: true,
+  os: true,
+  telegram: false,
+  bark: false,
+}
 
 function toSpec(input: z.infer<typeof simpleAlertSchema>): SimpleAlertSpec {
   const channels = { ...DEFAULT_CHANNELS, ...(input.channels ?? {}) }

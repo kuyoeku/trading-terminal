@@ -32,7 +32,7 @@ export const NOTIFICATION_GUIDE = [
   '- create_alert_flow is for what the simple form cannot say: a condition, a non-price event (an order filling, a signal, a candle close), or a channel like a webhook. It costs the user a graph to maintain, so only reach for it when they need it.',
   '- Every flow needs at least one event step and at least one channel step, and a rule with no binding watches nothing. Bind it with bind_alert.',
   '- Build each step by copying its `defaults` from get_alert_step_reference and changing only what you mean to change. Config keys are exact and are not the display labels. When validation rejects a step, the result carries that type’s `expectedConfig`, so fix the call rather than guessing another spelling.',
-  '- Delivery: in-app and OS notifications are safe defaults. Never switch on Telegram unless the user asks for it and has already connected a bot token, and never invent a webhook URL.',
+  '- Delivery: in-app and OS notifications are safe defaults. Never switch on Telegram or Bark unless the user asks for it and has already connected the channel in Settings, and never invent a webhook URL.',
   '- Cooldowns exist so one piece of news is not forty notifications. Simple alerts get a sensible one automatically; say what it is when it matters.',
 ].join('\n')
 

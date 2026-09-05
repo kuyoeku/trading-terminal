@@ -5,7 +5,7 @@
 // Event steps:     price-alert, percent-move, order-executed,
 //                  signal-generated, indicator-alert, candle-close
 // Condition steps: price-condition, percent-change, time-window
-// Channel steps:   local-toast, os-notification, webhook, telegram
+// Channel steps:   local-toast, os-notification, webhook, telegram, bark
 //
 // Pair/market context lives on the rule, not on individual event steps.
 // Event steps are the entry points of notification flows — they have no
@@ -623,6 +623,30 @@ const telegram: NotificationStepTypeDefinition = {
   deliver: async () => {},
 }
 
+/**
+ * Bark.
+ *
+ * The device key is deliberately NOT a config field. Same reason as Telegram:
+ * rules sync to the App Server under the `automation` domain, so a key here
+ * would be a credential uploaded to Pairlens. The terminal keeps it in the
+ * OS keychain (browser: the vault) and its delivery implementation reads it
+ * from there. The step has no routing of its own: one key, one phone.
+ */
+const bark: NotificationStepTypeDefinition = {
+  type: 'bark',
+  label: 'Bark',
+  icon: 'Smartphone',
+  category: 'channel',
+  handles: {
+    inputs: [{ id: 'in' }],
+    outputs: [],
+  },
+  configSchema: [],
+  validate: () => [],
+  defaultData: () => ({}),
+  deliver: async () => {},
+}
+
 // ── All Core Steps ───────────────────────────────────────────────────
 
 export const CORE_NOTIFICATION_STEPS: Array<NotificationStepTypeDefinition> = [
@@ -642,4 +666,5 @@ export const CORE_NOTIFICATION_STEPS: Array<NotificationStepTypeDefinition> = [
   osNotification,
   webhook,
   telegram,
+  bark,
 ]

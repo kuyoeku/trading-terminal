@@ -331,6 +331,22 @@ export const SETTINGS_SEARCH_INDEX: ReadonlyArray<SettingsSearchEntry> = [
       'phone',
     ],
   },
+  {
+    section: 'notifications',
+    titleKey: 'settings.notifications.bark.title',
+    descriptionKey: 'settings.notifications.bark.description',
+    keywords: [
+      'bark',
+      'iphone',
+      'ios',
+      'alerts',
+      'notifications',
+      'push',
+      'mobile',
+      'phone',
+      'day.app',
+    ],
+  },
   // Performance
   {
     section: 'performance',

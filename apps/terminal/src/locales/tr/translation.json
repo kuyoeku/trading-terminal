@@ -1876,7 +1876,7 @@
         "enable": "Aç",
         "blockedHelpBrowser": "Tarayıcın bu site için bildirimleri engelliyor. Adres çubuğunun yanındaki kilitten izin ver, sonra buraya dön.",
         "blockedHelpDesktop": "Sistemin Pairlens bildirimlerini engelliyor. İşletim sisteminin bildirim ayarlarından izin ver.",
-        "unsupportedHelp": "Bu tarayıcı sistem bildirimi gösteremiyor. Uyarılar yine uygulama içi toast olarak geliyor ve Telegram her hâlükârda çalışıyor.",
+        "unsupportedHelp": "Bu tarayıcı sistem bildirimi gösteremiyor. Uyarılar yine uygulama içi toast olarak geliyor ve Telegram ile Bark her hâlükârda çalışıyor.",
         "sendTest": "Test bildirimi gönder",
         "testTitle": "Pairlens",
         "testBody": "Bir uyarı böyle görünecek.",
@@ -1924,6 +1924,37 @@
         "testRuleName": "Test",
         "testTitle": "Pairlens bağlandı",
         "testBody": "Bildirim akışlarınızdan gelen uyarılar buraya düşecek."
+      },
+      "bark": {
+        "title": "Bark",
+        "description": "Uyarıları iPhone’daki Bark uygulamasına gönderin, terminale bakmadığınızda da ulaşsın.",
+        "runningNote": "Uyarılar yalnızca Pairlens çalışırken tetiklenir. Masaüstünde pencereyi kapattıktan sonra arka planda çalışmaya devam edebilir.",
+        "privacyNote": "Cihaz anahtarı bu cihazda kalır: masaüstünde sistem anahtarlığında, tarayıcıda şifreli kasada. Pairlens’e asla gönderilmez.",
+        "setup": {
+          "step1": "Bark’ı App Store’dan kurun ve açın.",
+          "step2": "Bark, https://api.day.app/xxxxxxxx/ gibi bir URL gösterir.",
+          "step3": "Onu aşağıya yapıştırın. Kendi sunucunuzun URL’si de aynı şekilde çalışır."
+        },
+        "openBark": "App Store’da Bark",
+        "urlPlaceholder": "https://api.day.app/your-key/",
+        "connect": "Bağlan",
+        "invalidUrl": "Bu bir Bark URL’si değil. Bark’ın gösterdiği adresi veya yalnızca cihaz anahtarını yapıştırın.",
+        "connectFailed": "Bark bağlanamadı.",
+        "errorUnauthorized": "Bark bu anahtarı reddetti. Uygulamadan URL’nin tamamını kopyaladığınızı kontrol edin.",
+        "errorNotFound": "Bu Bark sunucusu cihaz anahtarını tanımıyor.",
+        "errorRateLimited": "Bark bu anahtarı sınırlıyor. Biraz bekleyip yeniden deneyin.",
+        "errorServer": "Bark sunucusuna ulaşılamadı. URL’yi kontrol edin veya yeniden deneyin.",
+        "disconnect": "Bağlantıyı kes",
+        "disconnectFailed": "Bark bağlantısı kesilemedi.",
+        "connectedTo": "{{host}} adresine gönderiliyor",
+        "sendTest": "Test bildirimi gönder",
+        "testSent": "Test bildirimi gönderildi.",
+        "testFailed": "Test bildirimi gönderilemedi.",
+        "testRuleName": "Test",
+        "testTitle": "Pairlens bağlandı",
+        "testBody": "Bildirim akışlarınızdaki uyarılar buraya gelir.",
+        "reloadForGrant": "Masaüstü o Bark sunucusuna ulaşmadan önce yeniden yüklenmeli. Yeniden yükleyin, sonra test gönderin.",
+        "reloadNow": "Şimdi yeniden yükle"
       }
     },
     "security": {
@@ -5343,6 +5374,11 @@
         },
         "percentMove": {
           "title": "Fiyat Hareketi"
+        },
+        "bark": {
+          "title": "Bark",
+          "notConnected": "iPhone’unuza uyarı göndermek için Ayarlar’da Bark’ı bağlayın.",
+          "connect": "Bark’ı bağla"
         }
       }
     },
@@ -5409,6 +5445,9 @@
       },
       "percent-move": {
         "label": "Fiyat Hareketi"
+      },
+      "bark": {
+        "label": "Bark"
       }
     },
     "messages": {
@@ -5513,7 +5552,8 @@
             "1": "5m ile 24h arası"
           }
         }
-      }
+      },
+      "channelBark": "Bark"
     },
     "bell": {
       "tabArmed": "Devrede",

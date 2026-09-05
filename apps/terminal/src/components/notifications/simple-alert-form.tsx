@@ -11,7 +11,7 @@
  */
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Bell, MessageSquare, Send } from 'lucide-react'
+import { Bell, MessageSquare, Send, Smartphone } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 import { Button } from '@pairlens/ui/components/ui/button'
@@ -38,6 +38,7 @@ import type {
 import type { TFunction } from 'i18next'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import { useSystemNotificationPermission } from '@/hooks/use-system-notification-permission'
+import { useBarkConnection } from '@/hooks/use-bark-connection'
 import { useTelegramConnection } from '@/hooks/use-telegram-connection'
 
 // ── Formatting ───────────────────────────────────────────────────────
@@ -113,7 +114,7 @@ export function simpleAlertSummary(
 }
 
 export function hasChannel(channels: SimpleAlertChannels): boolean {
-  return channels.toast || channels.os || channels.telegram
+  return channels.toast || channels.os || channels.telegram || channels.bark
 }
 
 // ── Segmented control ────────────────────────────────────────────────
@@ -390,6 +391,7 @@ export function SimpleAlertChannelPicker({
 }) {
   const { t } = useTranslation()
   const telegram = useTelegramConnection()
+  const bark = useBarkConnection()
   const openSettings = useSettingsDialogStore((s) => s.open)
   const { permission, request } = useSystemNotificationPermission()
 
@@ -438,6 +440,11 @@ export function SimpleAlertChannelPicker({
       key: 'telegram' as const,
       icon: Send,
       label: t('notifications.simple.channelTelegram'),
+    },
+    {
+      key: 'bark' as const,
+      icon: Smartphone,
+      label: t('notifications.simple.channelBark'),
     },
   ]
 
@@ -500,6 +507,19 @@ export function SimpleAlertChannelPicker({
             onClick={() => openSettings('notifications')}
           >
             {t('notifications.builder.steps.telegram.connect')}
+          </Button>
+        </p>
+      )}
+      {channels.bark && !bark && (
+        <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+          {t('notifications.builder.steps.bark.notConnected')}
+          <Button
+            variant="link"
+            size="sm"
+            className="h-auto p-0 text-[11px]"
+            onClick={() => openSettings('notifications')}
+          >
+            {t('notifications.builder.steps.bark.connect')}
           </Button>
         </p>
       )}

@@ -1876,7 +1876,7 @@
         "enable": "開啟",
         "blockedHelpBrowser": "瀏覽器正在封鎖本網站的通知。請在網址列旁的鎖頭圖示中允許，然後回到這裡。",
         "blockedHelpDesktop": "系統正在封鎖 Pairlens 的通知。請在作業系統的通知設定中允許。",
-        "unsupportedHelp": "此瀏覽器無法顯示系統通知。提醒仍會以應用程式內提示送達，Telegram 也照常運作。",
+        "unsupportedHelp": "此瀏覽器無法顯示系統通知。提醒仍會以應用程式內提示送達，Telegram 和 Bark 也照常運作。",
         "sendTest": "傳送測試通知",
         "testTitle": "Pairlens",
         "testBody": "提醒會是這個樣子。",
@@ -1924,6 +1924,37 @@
         "testRuleName": "測試",
         "testTitle": "Pairlens 已連接",
         "testBody": "通知流程的提醒將傳送到這裡。"
+      },
+      "bark": {
+        "title": "Bark",
+        "description": "將提醒推送到 iPhone 上的 Bark，即使你沒有盯著終端機也能收到通知。",
+        "runningNote": "只有 Pairlens 在執行時提醒才會觸發。桌面端可以在關閉視窗後繼續在背景執行。",
+        "privacyNote": "裝置金鑰只保存在本裝置：桌面端存於系統鑰匙圈，瀏覽器端存於加密保險庫，絕不會傳送到 Pairlens。",
+        "setup": {
+          "step1": "從 App Store 安裝 Bark 並開啟。",
+          "step2": "Bark 會顯示一個形如 https://api.day.app/xxxxxxxx/ 的網址。",
+          "step3": "把該網址貼到下方。自架伺服器的網址同樣適用。"
+        },
+        "openBark": "在 App Store 開啟 Bark",
+        "urlPlaceholder": "https://api.day.app/your-key/",
+        "connect": "連接",
+        "invalidUrl": "這不是 Bark 網址。請貼上 Bark 顯示的連結，或只貼上裝置金鑰。",
+        "connectFailed": "無法連接 Bark。",
+        "errorUnauthorized": "Bark 拒絕了該裝置金鑰。請確認已從應用程式完整複製網址。",
+        "errorNotFound": "該 Bark 伺服器無法識別這個裝置金鑰。",
+        "errorRateLimited": "Bark 正在限制該金鑰的請求頻率。請稍候再試。",
+        "errorServer": "無法連線 Bark 伺服器。請檢查網址後重試。",
+        "disconnect": "中斷連接",
+        "disconnectFailed": "無法中斷 Bark 連接。",
+        "connectedTo": "推送到 {{host}}",
+        "sendTest": "傳送測試通知",
+        "testSent": "測試通知已傳送。",
+        "testFailed": "無法傳送測試通知。",
+        "testRuleName": "測試",
+        "testTitle": "Pairlens 已連線",
+        "testBody": "通知流程的提醒將傳送到這裡。",
+        "reloadForGrant": "桌面端需要重新載入後才能連到該 Bark 伺服器。請重新載入，然後傳送測試。",
+        "reloadNow": "立即重新載入"
       }
     },
     "security": {
@@ -5343,6 +5374,11 @@
         },
         "percentMove": {
           "title": "價格波動"
+        },
+        "bark": {
+          "title": "Bark",
+          "notConnected": "在設定中連接 Bark，即可把提醒推送到 iPhone。",
+          "connect": "連接 Bark"
         }
       }
     },
@@ -5409,6 +5445,9 @@
       },
       "percent-move": {
         "label": "價格波動"
+      },
+      "bark": {
+        "label": "Bark"
       }
     },
     "messages": {
@@ -5513,7 +5552,8 @@
             "1": "5m 到 24h"
           }
         }
-      }
+      },
+      "channelBark": "Bark"
     },
     "bell": {
       "tabArmed": "已啟用",

@@ -72,6 +72,7 @@ export type SimpleAlertChannels = {
   toast: boolean
   os: boolean
   telegram: boolean
+  bark: boolean
 }
 
 export type SimpleAlertSpec =
@@ -95,18 +96,21 @@ export const SIMPLE_ALERT_CHANNEL_TYPES = {
   toast: 'local-toast',
   os: 'os-notification',
   telegram: 'telegram',
+  bark: 'bark',
 } as const
 
 const CHANNEL_TYPE_TO_KEY: Record<string, keyof SimpleAlertChannels> = {
   'local-toast': 'toast',
   'os-notification': 'os',
   telegram: 'telegram',
+  bark: 'bark',
 }
 
 export const DEFAULT_SIMPLE_ALERT_CHANNELS: SimpleAlertChannels = {
   toast: true,
   os: true,
   telegram: false,
+  bark: false,
 }
 
 // ── Cooldowns ────────────────────────────────────────────────────────
@@ -180,6 +184,7 @@ function channelStepsFor(
   if (channels.toast) push('local-toast', {})
   if (channels.os) push('os-notification', { sound: true })
   if (channels.telegram) push('telegram', { chatId: '', silent: false })
+  if (channels.bark) push('bark', {})
   return steps
 }
 
@@ -263,6 +268,7 @@ export function readSimpleAlert(
     toast: false,
     os: false,
     telegram: false,
+    bark: false,
   }
   for (const channel of channels) {
     selected[CHANNEL_TYPE_TO_KEY[channel.type]] = true

@@ -1876,7 +1876,7 @@
         "enable": "Activar",
         "blockedHelpBrowser": "Tu navegador está bloqueando las notificaciones de este sitio. Permítelas desde el candado junto a la barra de direcciones y vuelve.",
         "blockedHelpDesktop": "Tu sistema está bloqueando las notificaciones de Pairlens. Permítelas en los ajustes de notificaciones del sistema operativo.",
-        "unsupportedHelp": "Este navegador no puede mostrar notificaciones del sistema. Las alertas siguen llegando como avisos dentro de la app, y Telegram funciona igual.",
+        "unsupportedHelp": "Este navegador no puede mostrar notificaciones del sistema. Las alertas siguen llegando como avisos dentro de la app, y Telegram y Bark funcionan igual.",
         "sendTest": "Enviar notificación de prueba",
         "testTitle": "Pairlens",
         "testBody": "Así se verá una alerta.",
@@ -1924,6 +1924,37 @@
         "testRuleName": "Prueba",
         "testTitle": "Pairlens está conectado",
         "testBody": "Aquí llegarán las alertas de tus flujos de notificación."
+      },
+      "bark": {
+        "title": "Bark",
+        "description": "Envía alertas a la app Bark de tu iPhone, para que te lleguen cuando no estás mirando el terminal.",
+        "runningNote": "Las alertas solo se disparan mientras Pairlens está en marcha. En escritorio puede seguir en segundo plano después de cerrar la ventana.",
+        "privacyNote": "La clave del dispositivo se queda en este equipo: en el llavero del sistema en escritorio, en tu bóveda cifrada en el navegador. Nunca se envía a Pairlens.",
+        "setup": {
+          "step1": "Instala Bark desde el App Store y ábrela.",
+          "step2": "Bark muestra una URL como https://api.day.app/xxxxxxxx/.",
+          "step3": "Pégala abajo. Una URL de un servidor propio funciona igual."
+        },
+        "openBark": "Bark en el App Store",
+        "urlPlaceholder": "https://api.day.app/your-key/",
+        "connect": "Conectar",
+        "invalidUrl": "Esa no es una URL de Bark. Pega la dirección que muestra Bark, o solo la clave del dispositivo.",
+        "connectFailed": "No se pudo conectar Bark.",
+        "errorUnauthorized": "Bark rechazó esa clave. Comprueba que copiaste la URL completa de la app.",
+        "errorNotFound": "Ese servidor Bark no reconoce la clave del dispositivo.",
+        "errorRateLimited": "Bark está limitando esta clave. Espera un momento y vuelve a intentarlo.",
+        "errorServer": "No se pudo alcanzar el servidor Bark. Revisa la URL o inténtalo de nuevo.",
+        "disconnect": "Desconectar",
+        "disconnectFailed": "No se pudo desconectar Bark.",
+        "connectedTo": "Enviando a {{host}}",
+        "sendTest": "Enviar notificación de prueba",
+        "testSent": "Notificación de prueba enviada.",
+        "testFailed": "No se pudo enviar la notificación de prueba.",
+        "testRuleName": "Prueba",
+        "testTitle": "Pairlens está conectado",
+        "testBody": "Las alertas de tus flujos de notificación llegarán aquí.",
+        "reloadForGrant": "El escritorio necesita recargarse para llegar a ese servidor Bark. Recarga y luego envía una prueba.",
+        "reloadNow": "Recargar ahora"
       }
     },
     "security": {
@@ -5343,6 +5374,11 @@
         },
         "percentMove": {
           "title": "Movimiento de precio"
+        },
+        "bark": {
+          "title": "Bark",
+          "notConnected": "Conecta Bark en Ajustes para enviar alertas a tu iPhone.",
+          "connect": "Conectar Bark"
         }
       }
     },
@@ -5409,6 +5445,9 @@
       },
       "percent-move": {
         "label": "Movimiento de precio"
+      },
+      "bark": {
+        "label": "Bark"
       }
     },
     "messages": {
@@ -5513,7 +5552,8 @@
             "1": "De 5m a 24h"
           }
         }
-      }
+      },
+      "channelBark": "Bark"
     },
     "bell": {
       "tabArmed": "Activas",

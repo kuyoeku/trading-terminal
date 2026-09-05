@@ -1,12 +1,12 @@
 ---
 title: Alerts and notifications
-description: Set a price alert in two fields, watch for a percent move inside a window, see what already fired, and build multi-step flows with conditions, Telegram, and webhooks when you need them.
+description: Set a price alert in two fields, watch for a percent move inside a window, see what already fired, and build multi-step flows with conditions, Telegram, Bark, and webhooks when you need them.
 group: traders
 parent: automation
 order: 2
 eyebrow: For traders
-updated: 22 AUG 2026
-readTime: 7 min read
+updated: 5 SEP 2026
+readTime: 8 min read
 ---
 
 An alert watches a market for you and tells you when something happens. It never
@@ -32,8 +32,8 @@ on the canvas.
 
 A flow it builds lands as pending changes for you to commit, the same as one
 you drew. Delivery stays conservative: in-app and OS notifications by default,
-Telegram only when you ask and only when you have already connected a bot
-token, and never a webhook URL it made up.
+Telegram or Bark only when you ask and only when you have already connected
+them, and never a webhook URL it made up.
 
 ## Set one in two fields
 
@@ -63,8 +63,8 @@ filled in.
 
 ### Choosing how it reaches you
 
-Three chips at the bottom of the dialog: **In-app** (a toast), **Desktop** (a
-real OS notification), and **Telegram**. A channel that cannot deliver on this
+Four chips at the bottom of the dialog: **In-app** (a toast), **Desktop** (a
+real OS notification), **Telegram**, and **Bark**. A channel that cannot deliver on this
 device says so instead of pretending: Desktop strikes through where the
 platform has no notification API at all, and asks for permission the moment you
 arm it where it does.
@@ -169,6 +169,13 @@ send that flow somewhere else: a group with your trading partners, a channel you
 broadcast to. **Silent** delivers without a sound, for the alerts you want
 logged but not announced.
 
+**Bark.** A push to the Bark app on your iPhone. Same job as Telegram when that
+is the phone you actually look at. It also moves the alert off this machine
+and does not keep the rule running. Set it up once under
+**Settings → Notifications** (see below), then pick the chip in any alert or
+drop the channel into any flow. There is nothing to configure on the step:
+one device key, one phone.
+
 **Webhook.** An HTTP GET or POST to a URL you supply, optionally including the
 event payload. This is the escape hatch: pipe alerts into Discord, your own
 service, or anything that accepts a hook. Webhooks are flow-only, because a URL
@@ -202,6 +209,29 @@ its own bot (or the same token pasted again).
 
 If a bot ever leaks, `/revoke` in BotFather invalidates the token and hands you
 a new one.
+
+## Connecting Bark
+
+Bark is a small iOS app that turns an HTTP request into a lock-screen
+notification. You already have a device key the moment you open it.
+
+1. Install [Bark](https://apps.apple.com/app/bark-customed-notifications/id1403753865)
+   and open it. The home screen is a URL that looks like
+   `https://api.day.app/xxxxxxxx/`.
+2. Paste that URL into **Settings → Notifications → Bark** and press Connect.
+   Just the key works too, and a self-hosted server URL is the same paste.
+3. Press **Send test notification**. If the phone lights up, every alert that
+   picks Bark will go there.
+
+The device key is a credential and is stored like one: the OS keychain on
+desktop, your encrypted vault in the browser. It never reaches a Pairlens
+server, and it is deliberately not part of the flow itself, so a rule that
+syncs across your devices does not carry the key with it. That also means each
+device connects its own key (or the same URL pasted again).
+
+If a key ever leaks, delete the device in Bark and it stops accepting pushes.
+A self-hosted server on desktop is added to the app's network allowlist when
+you connect; reload once if the first test cannot reach it.
 
 ## Delivery on desktop
 

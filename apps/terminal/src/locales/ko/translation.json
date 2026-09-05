@@ -1876,7 +1876,7 @@
         "enable": "켜기",
         "blockedHelpBrowser": "브라우저가 이 사이트의 알림을 차단하고 있습니다. 주소창 옆 자물쇠에서 허용한 뒤 돌아오세요.",
         "blockedHelpDesktop": "시스템이 Pairlens 알림을 차단하고 있습니다. 운영체제의 알림 설정에서 허용하세요.",
-        "unsupportedHelp": "이 브라우저는 시스템 알림을 표시할 수 없습니다. 알림은 앱 내 토스트로 계속 도착하고, 텔레그램은 어느 쪽이든 동작합니다.",
+        "unsupportedHelp": "이 브라우저는 시스템 알림을 표시할 수 없습니다. 알림은 앱 내 토스트로 계속 도착하고, 텔레그램과 Bark는 어느 쪽이든 동작합니다.",
         "sendTest": "테스트 알림 보내기",
         "testTitle": "Pairlens",
         "testBody": "알림은 이렇게 표시됩니다.",
@@ -1924,6 +1924,37 @@
         "testRuleName": "테스트",
         "testTitle": "Pairlens 연결됨",
         "testBody": "알림 플로우의 알림이 여기로 도착합니다."
+      },
+      "bark": {
+        "title": "Bark",
+        "description": "iPhone의 Bark 앱으로 알림을 보내, 터미널을 보고 있지 않을 때도 받게 합니다.",
+        "runningNote": "알림은 Pairlens가 실행 중일 때만 발생합니다. 데스크톱에서는 창을 닫은 뒤에도 백그라운드에서 계속 실행할 수 있습니다.",
+        "privacyNote": "기기 키는 이 기기에만 남습니다. 데스크톱은 OS 키체인, 브라우저는 암호화된 금고입니다. Pairlens로 전송되지 않습니다.",
+        "setup": {
+          "step1": "App Store에서 Bark를 설치하고 엽니다.",
+          "step2": "Bark는 https://api.day.app/xxxxxxxx/ 같은 URL을 보여 줍니다.",
+          "step3": "그 URL을 아래에 붙여 넣으세요. 직접 호스팅한 서버 URL도 같습니다."
+        },
+        "openBark": "App Store의 Bark",
+        "urlPlaceholder": "https://api.day.app/your-key/",
+        "connect": "연결",
+        "invalidUrl": "Bark URL이 아닙니다. Bark가 보여 주는 주소나 기기 키만 붙여 넣으세요.",
+        "connectFailed": "Bark를 연결할 수 없습니다.",
+        "errorUnauthorized": "Bark가 그 기기 키를 거부했습니다. 앱에서 URL을 전부 복사했는지 확인하세요.",
+        "errorNotFound": "그 Bark 서버가 기기 키를 인식하지 못했습니다.",
+        "errorRateLimited": "Bark가 이 키를 제한하고 있습니다. 잠시 후 다시 시도하세요.",
+        "errorServer": "Bark 서버에 닿지 못했습니다. URL을 확인하거나 다시 시도하세요.",
+        "disconnect": "연결 해제",
+        "disconnectFailed": "Bark 연결을 해제할 수 없습니다.",
+        "connectedTo": "{{host}}(으)로 전송",
+        "sendTest": "테스트 알림 보내기",
+        "testSent": "테스트 알림을 보냈습니다.",
+        "testFailed": "테스트 알림을 보낼 수 없습니다.",
+        "testRuleName": "테스트",
+        "testTitle": "Pairlens가 연결되었습니다",
+        "testBody": "알림 흐름의 알림이 여기로 도착합니다.",
+        "reloadForGrant": "데스크톱은 그 Bark 서버에 닿기 전에 새로고침이 필요합니다. 새로고침한 다음 테스트를 보내세요.",
+        "reloadNow": "지금 새로고침"
       }
     },
     "security": {
@@ -5343,6 +5374,11 @@
         },
         "percentMove": {
           "title": "가격 변동"
+        },
+        "bark": {
+          "title": "Bark",
+          "notConnected": "설정에서 Bark를 연결하면 iPhone으로 알림을 보낼 수 있습니다.",
+          "connect": "Bark 연결"
         }
       }
     },
@@ -5409,6 +5445,9 @@
       },
       "percent-move": {
         "label": "가격 변동"
+      },
+      "bark": {
+        "label": "Bark"
       }
     },
     "messages": {
@@ -5513,7 +5552,8 @@
             "1": "5m~24h"
           }
         }
-      }
+      },
+      "channelBark": "Bark"
     },
     "bell": {
       "tabArmed": "작동 중",
