@@ -52,7 +52,9 @@ function uniqueTools(
     }
     if (seen.has(id)) continue
     seen.add(id)
-    out.push(latest.get(id)!)
+    const kept = latest.get(id)
+    if (!kept) continue
+    out.push(kept)
   }
   return out
 }
