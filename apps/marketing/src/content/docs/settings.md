@@ -4,7 +4,7 @@ description: 'Every setting in the terminal, and the three worth visiting first:
 group: traders
 order: 10
 eyebrow: For traders
-updated: 5 SEP 2026
+updated: 7 SEP 2026
 readTime: 12 min read
 ---
 
@@ -371,10 +371,11 @@ in the bot, link the chat) and any alert can then deliver to it. The bot token i
 keychain on desktop, encrypted vault in the browser, never on a Pairlens
 server.
 
-Connect Bark the same way: paste the URL the Bark app shows you
-(`https://api.day.app/…`, or your own server) and any alert can push to that
-iPhone. The device key is stored like the Telegram token, never on a Pairlens
-server.
+Connect Bark by pasting the URL the Bark app shows you
+(`https://api.day.app/…`, or your own server). Any alert can then push to that
+iPhone. The address stays on this device: it is not a credential, so it is not
+in the keychain or the vault, and it is never sent to Pairlens. Press Send test
+notification to confirm the phone lights up.
 
 Full walkthrough in
 [Alerts and notifications](/docs/alerts-notifications).

@@ -1929,7 +1929,7 @@
         "title": "Bark",
         "description": "Sende Alarme an die Bark-App auf deinem iPhone, damit sie dich erreichen, wenn du nicht auf das Terminal schaust.",
         "runningNote": "Alarme lösen nur aus, solange Pairlens läuft. Auf dem Desktop kann es nach dem Schließen des Fensters im Hintergrund weiterlaufen.",
-        "privacyNote": "Der Geräteschlüssel bleibt auf diesem Gerät: in der System-Schlüsselbund-App auf dem Desktop, im verschlüsselten Tresor im Browser. Er wird nie an Pairlens gesendet.",
+        "privacyNote": "Die Bark-Adresse bleibt auf diesem Gerät. Sie wird nicht synchronisiert und nie an Pairlens gesendet.",
         "setup": {
           "step1": "Installiere Bark aus dem App Store und öffne es.",
           "step2": "Bark zeigt eine URL wie https://api.day.app/xxxxxxxx/.",
@@ -1945,7 +1945,6 @@
         "errorRateLimited": "Bark begrenzt diesen Schlüssel. Warte einen Moment und versuche es erneut.",
         "errorServer": "Der Bark-Server war nicht erreichbar. Prüfe die URL oder versuche es erneut.",
         "disconnect": "Trennen",
-        "disconnectFailed": "Bark konnte nicht getrennt werden.",
         "connectedTo": "Push an {{host}}",
         "sendTest": "Testbenachrichtigung senden",
         "testSent": "Testbenachrichtigung gesendet.",

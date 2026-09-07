@@ -1929,7 +1929,7 @@
         "title": "Bark",
         "description": "Kirim peringatan ke aplikasi Bark di iPhone, supaya sampai saat Anda tidak sedang melihat terminal.",
         "runningNote": "Peringatan hanya terpicu saat Pairlens berjalan. Di desktop ia bisa terus berjalan di latar belakang setelah jendela ditutup.",
-        "privacyNote": "Kunci perangkat tetap di perangkat ini: keychain sistem di desktop, brankas terenkripsi di peramban. Tidak pernah dikirim ke Pairlens.",
+        "privacyNote": "Alamat Bark tetap di perangkat ini. Tidak disinkronkan, dan tidak pernah dikirim ke Pairlens.",
         "setup": {
           "step1": "Pasang Bark dari App Store lalu buka.",
           "step2": "Bark menampilkan URL seperti https://api.day.app/xxxxxxxx/.",
@@ -1945,7 +1945,6 @@
         "errorRateLimited": "Bark sedang membatasi kunci ini. Tunggu sebentar lalu coba lagi.",
         "errorServer": "Tidak bisa menjangkau server Bark. Periksa URL atau coba lagi.",
         "disconnect": "Putuskan",
-        "disconnectFailed": "Tidak bisa memutus Bark.",
         "connectedTo": "Mengirim ke {{host}}",
         "sendTest": "Kirim notifikasi uji",
         "testSent": "Notifikasi uji terkirim.",

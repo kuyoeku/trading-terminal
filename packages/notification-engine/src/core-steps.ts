@@ -626,11 +626,9 @@ const telegram: NotificationStepTypeDefinition = {
 /**
  * Bark.
  *
- * The device key is deliberately NOT a config field. Same reason as Telegram:
- * rules sync to the App Server under the `automation` domain, so a key here
- * would be a credential uploaded to Pairlens. The terminal keeps it in the
- * OS keychain (browser: the vault) and its delivery implementation reads it
- * from there. The step has no routing of its own: one key, one phone.
+ * The push address is deliberately NOT a config field. Rules sync to the
+ * App Server under the `automation` domain; the address is device setup in
+ * Settings. The step has no routing of its own: one address, one phone.
  */
 const bark: NotificationStepTypeDefinition = {
   type: 'bark',

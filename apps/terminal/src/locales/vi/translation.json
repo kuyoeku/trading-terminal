@@ -1929,7 +1929,7 @@
         "title": "Bark",
         "description": "Gửi cảnh báo tới ứng dụng Bark trên iPhone, để chúng tới khi bạn không nhìn terminal.",
         "runningNote": "Cảnh báo chỉ kích hoạt khi Pairlens đang chạy. Trên desktop nó có thể chạy nền sau khi bạn đóng cửa sổ.",
-        "privacyNote": "Khóa thiết bị ở lại trên máy này: keychain hệ thống trên desktop, kho mã hóa trong trình duyệt. Không bao giờ gửi tới Pairlens.",
+        "privacyNote": "Địa chỉ Bark ở lại trên thiết bị này. Nó không được đồng bộ, và không bao giờ được gửi tới Pairlens.",
         "setup": {
           "step1": "Cài Bark từ App Store rồi mở.",
           "step2": "Bark hiện URL dạng https://api.day.app/xxxxxxxx/.",
@@ -1945,7 +1945,6 @@
         "errorRateLimited": "Bark đang giới hạn khóa này. Đợi một lúc rồi thử lại.",
         "errorServer": "Không tới được máy chủ Bark. Kiểm tra URL hoặc thử lại.",
         "disconnect": "Ngắt kết nối",
-        "disconnectFailed": "Không ngắt được Bark.",
         "connectedTo": "Đẩy tới {{host}}",
         "sendTest": "Gửi thông báo thử",
         "testSent": "Đã gửi thông báo thử.",

@@ -1995,7 +1995,7 @@
         "title": "Bark",
         "description": "Wysyłaj alerty do aplikacji Bark na iPhonie, żeby docierały na telefon, gdy nie patrzysz na terminal.",
         "runningNote": "Alerty wyzwalają się tylko gdy Pairlens działa. Na pulpicie może działać w tle po zamknięciu okna.",
-        "privacyNote": "Klucz urządzenia zostaje na tym urządzeniu: w pęku kluczy systemu na pulpicie, w zaszyfrowanym sejfie w przeglądarce. Nigdy nie jest wysyłany do Pairlens.",
+        "privacyNote": "Adres Bark zostaje na tym urządzeniu. Nie jest synchronizowany i nigdy nie jest wysyłany do Pairlens.",
         "setup": {
           "step1": "Zainstaluj Bark z App Store i otwórz go.",
           "step2": "Bark pokazuje adres jak https://api.day.app/xxxxxxxx/.",
@@ -2011,7 +2011,6 @@
         "errorRateLimited": "Bark ogranicza ten klucz. Poczekaj chwilę i spróbuj ponownie.",
         "errorServer": "Nie udało się dotrzeć do serwera Bark. Sprawdź adres albo spróbuj ponownie.",
         "disconnect": "Rozłącz",
-        "disconnectFailed": "Nie udało się rozłączyć Bark.",
         "connectedTo": "Wysyłanie do {{host}}",
         "sendTest": "Wyślij powiadomienie testowe",
         "testSent": "Wysłano powiadomienie testowe.",

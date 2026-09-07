@@ -1929,7 +1929,7 @@
         "title": "Bark",
         "description": "將提醒推送到 iPhone 上的 Bark，即使你沒有盯著終端機也能收到通知。",
         "runningNote": "只有 Pairlens 在執行時提醒才會觸發。桌面端可以在關閉視窗後繼續在背景執行。",
-        "privacyNote": "裝置金鑰只保存在本裝置：桌面端存於系統鑰匙圈，瀏覽器端存於加密保險庫，絕不會傳送到 Pairlens。",
+        "privacyNote": "Bark 位址只留在這台裝置。不會同步，也絕不會傳送給 Pairlens。",
         "setup": {
           "step1": "從 App Store 安裝 Bark 並開啟。",
           "step2": "Bark 會顯示一個形如 https://api.day.app/xxxxxxxx/ 的網址。",
@@ -1945,7 +1945,6 @@
         "errorRateLimited": "Bark 正在限制該金鑰的請求頻率。請稍候再試。",
         "errorServer": "無法連線 Bark 伺服器。請檢查網址後重試。",
         "disconnect": "中斷連接",
-        "disconnectFailed": "無法中斷 Bark 連接。",
         "connectedTo": "推送到 {{host}}",
         "sendTest": "傳送測試通知",
         "testSent": "測試通知已傳送。",

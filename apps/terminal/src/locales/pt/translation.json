@@ -1929,7 +1929,7 @@
         "title": "Bark",
         "description": "Envie alertas para o app Bark no seu iPhone, para que cheguem quando você não estiver olhando o terminal.",
         "runningNote": "Os alertas só disparam enquanto o Pairlens estiver em execução. No desktop ele pode continuar em segundo plano depois de fechar a janela.",
-        "privacyNote": "A chave do dispositivo fica neste aparelho: no chaveiro do sistema no desktop, no cofre criptografado no navegador. Nunca é enviada à Pairlens.",
+        "privacyNote": "O endereço Bark fica neste aparelho. Não é sincronizado e nunca é enviado à Pairlens.",
         "setup": {
           "step1": "Instale o Bark na App Store e abra-o.",
           "step2": "O Bark mostra um URL como https://api.day.app/xxxxxxxx/.",
@@ -1945,7 +1945,6 @@
         "errorRateLimited": "O Bark está limitando esta chave. Espere um momento e tente de novo.",
         "errorServer": "Não foi possível alcançar o servidor Bark. Confira o URL ou tente de novo.",
         "disconnect": "Desconectar",
-        "disconnectFailed": "Não foi possível desconectar o Bark.",
         "connectedTo": "Enviando para {{host}}",
         "sendTest": "Enviar notificação de teste",
         "testSent": "Notificação de teste enviada.",

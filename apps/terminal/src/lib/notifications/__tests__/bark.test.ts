@@ -1,13 +1,18 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { describe, expect, test } from 'bun:test'
+import { beforeEach, describe, expect, test } from 'bun:test'
 
 import { CORE_NOTIFICATION_STEPS } from '@pairlens/notification-engine/core-steps'
 import {
+  BARK_CONNECTION_KEY,
   DEFAULT_BARK_ORIGIN,
+  connectBark,
+  disconnectBark,
   formatBarkPayload,
+  loadBarkConnection,
   looksLikeDeviceKey,
   parseBarkEndpoint,
+  readBarkDeviceKey,
 } from '../bark'
 import type { NotificationMessage } from '@pairlens/notification-engine/types'
 
@@ -133,10 +138,55 @@ describe('bark step definition', () => {
     expect(step?.handles.outputs).toHaveLength(0)
   })
 
-  test('carries no credential field', () => {
-    // A device key here would be a secret persisted into rules, which sync
-    // to the App Server. It belongs in the keychain and nowhere else.
+  test('carries no per-rule address field', () => {
+    // The Bark URL is device setup in Settings, not something a synced
+    // rule should carry. One address, one phone.
     const keys = step?.configSchema.map((f) => f.key) ?? []
     expect(keys).toEqual([])
+  })
+})
+
+class MemoryStorage {
+  private map = new Map<string, string>()
+  getItem(k: string): string | null {
+    return this.map.has(k) ? this.map.get(k)! : null
+  }
+  setItem(k: string, v: string): void {
+    this.map.set(k, v)
+  }
+  removeItem(k: string): void {
+    this.map.delete(k)
+  }
+}
+
+describe('connection storage', () => {
+  beforeEach(() => {
+    ;(globalThis as unknown as { localStorage: MemoryStorage }).localStorage =
+      new MemoryStorage()
+  })
+
+  test('keeps origin and device key together in localStorage', async () => {
+    await connectBark('https://api.day.app/ynJ5Ft4atkMkWeo2PAvFhF/')
+    expect(loadBarkConnection()).toEqual({
+      origin: DEFAULT_BARK_ORIGIN,
+      deviceKey: 'ynJ5Ft4atkMkWeo2PAvFhF',
+      connectedAt: expect.any(Number),
+    })
+    expect(readBarkDeviceKey()).toBe('ynJ5Ft4atkMkWeo2PAvFhF')
+    expect(localStorage.getItem(BARK_CONNECTION_KEY)).toContain(
+      'ynJ5Ft4atkMkWeo2PAvFhF',
+    )
+    disconnectBark()
+    expect(loadBarkConnection()).toBeNull()
+    expect(readBarkDeviceKey()).toBeNull()
+  })
+
+  test('an origin-only leftover record is not connected', () => {
+    localStorage.setItem(
+      BARK_CONNECTION_KEY,
+      JSON.stringify({ origin: DEFAULT_BARK_ORIGIN, connectedAt: 1 }),
+    )
+    expect(loadBarkConnection()).toBeNull()
+    expect(readBarkDeviceKey()).toBeNull()
   })
 })

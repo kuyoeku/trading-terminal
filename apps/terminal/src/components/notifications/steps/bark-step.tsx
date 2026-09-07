@@ -14,24 +14,19 @@ import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
  * The Bark channel node.
  *
  * It shows connection state because this is a channel that can sit on the
- * canvas and still deliver nothing: the device key lives in the keychain,
- * set up in Settings. A node that looked complete while nothing was
- * connected would fail silently at the first alert, so the unconnected
- * state is a button that goes and fixes it.
+ * canvas and still deliver nothing: the push address is set up in Settings,
+ * not on the node. A node that looked complete while nothing was connected
+ * would fail silently at the first alert, so the unconnected state is a
+ * button that goes and fixes it.
  */
 export function BarkStep({ data }: NodeProps) {
   const { t } = useTranslation()
   const connection = useBarkConnection()
   const openSettings = useSettingsDialogStore((s) => s.open)
 
-  let host = ''
-  if (connection) {
-    try {
-      host = new URL(connection.origin).hostname
-    } catch {
-      host = connection.origin
-    }
-  }
+  const address = connection
+    ? `${connection.origin.replace(/\/$/, '')}/${connection.deviceKey}`
+    : ''
 
   return (
     <div
@@ -68,7 +63,7 @@ export function BarkStep({ data }: NodeProps) {
       <div className="mt-2 space-y-1.5">
         {connection ? (
           <div className="truncate font-mono text-[9px] text-muted-foreground">
-            {host}
+            {address}
           </div>
         ) : (
           <>

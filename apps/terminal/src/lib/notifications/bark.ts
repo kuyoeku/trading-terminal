@@ -5,22 +5,18 @@
  *
  * The terminal talks to the Bark server directly from the client — the same
  * shape as Telegram. There is no Pairlens relay, which is what makes this
- * work in a standalone install and what keeps the device key off our servers.
+ * work in a standalone install.
  *
- * ## Where the key lives, and why not in the rule
+ * ## Where the address lives, and why not in the rule
  *
- * A Bark device key is enough to push to that phone. Notification rules are
- * localStorage records that ride the sync bus to the App Server under the
- * `automation` domain, so a key stored as step config would be a credential
- * uploaded to Pairlens — the one thing the credential design forbids. It goes
- * in the keychain slot below instead: the OS keychain on desktop, the vault
- * in the browser. The step carries nothing.
- *
- * The non-secret half of the connection (which server the key is registered
- * with) is a plain localStorage record. It is deliberately NOT emitted on the
- * sync channel — the coordinator drops unknown keys, so nothing has to
- * blocklist it — because a host that resolves against a key only this device
- * holds is meaningless on another device anyway.
+ * A Bark URL is a push address, not a credential: anyone who can see it can
+ * send a notification, and that is the whole of the product. It does not go
+ * in the keychain or the vault. Notification rules still must not carry it,
+ * because they ride the sync bus to the App Server under the `automation`
+ * domain. The address is a plain localStorage record on this device. It is
+ * deliberately NOT emitted on the sync channel — the coordinator drops
+ * unknown keys — because a phone that only this machine pushes to is
+ * meaningless on another device anyway.
  *
  * ## CORS and desktop CSP
  *
@@ -32,20 +28,15 @@
  */
 
 import type { NotificationMessage } from '@pairlens/notification-engine/types'
-import { deleteCredential, getCredential, saveCredential } from '@/lib/keychain'
 import {
   computeUngrantedHostList,
   grantNetworkHosts,
   isDesktopNetworkGoverned,
 } from '@/lib/plugins/network-grants'
-import { assertCanAddCredential } from '@/lib/security/vault/vault-policy'
 
 // ── Storage ──────────────────────────────────────────────────────────
 
-/** Keychain slot holding the device key. Never synced, never in a rule. */
-export const BARK_KEY_SLOT = 'integration:bark-device-key'
-
-/** localStorage key for the non-secret half of the connection. */
+/** localStorage key for the Bark connection (origin + device key). */
 export const BARK_CONNECTION_KEY = 'pairlens:bark-connection'
 
 /** Official Bark push host. Self-hosted installs replace this. */
@@ -65,8 +56,8 @@ export type BarkEndpoint = {
 }
 
 export type BarkConnection = {
-  /** Origin only, never the key. */
   origin: string
+  deviceKey: string
   connectedAt: number
 }
 
@@ -205,7 +196,9 @@ export function loadBarkConnection(): BarkConnection | null {
       const parsed = JSON.parse(raw) as BarkConnection
       if (
         typeof parsed.origin === 'string' &&
-        parsed.origin.startsWith('http')
+        parsed.origin.startsWith('http') &&
+        typeof parsed.deviceKey === 'string' &&
+        looksLikeDeviceKey(parsed.deviceKey)
       ) {
         snapshotValue = parsed
       }
@@ -236,7 +229,6 @@ export function subscribeBarkConnection(listener: () => void): () => void {
 
 function onStorage(event: StorageEvent) {
   if (event.key !== null && event.key !== BARK_CONNECTION_KEY) return
-  keyCache = null
   notifyConnectionChanged()
 }
 
@@ -248,37 +240,15 @@ function storeBarkConnection(connection: BarkConnection): void {
   try {
     localStorage.setItem(BARK_CONNECTION_KEY, JSON.stringify(connection))
   } catch {
-    // Quota — the key is already saved, so the connection still works for
-    // this session; it just won't survive a reload.
+    // Quota — the connection still works for this session; it just won't
+    // survive a reload.
   }
   notifyConnectionChanged()
 }
 
-// ── Token access ─────────────────────────────────────────────────────
-
-/**
- * Reading a credential can mean a keychain round trip or a vault decrypt, and
- * every delivered notification needs one. Cached after the first read and
- * dropped whenever the connection changes.
- */
-let keyCache: string | null = null
-
-/**
- * The live device key, or null when Bark is not connected.
- *
- * Gated on the connection record existing, which is what makes a disconnect
- * in another window take effect here. Vault errors propagate — a sealed vault
- * is "come back when you can open this", not "no device configured".
- */
-export async function readBarkDeviceKey(): Promise<string | null> {
-  if (!loadBarkConnection()) {
-    keyCache = null
-    return null
-  }
-  if (keyCache) return keyCache
-  const stored = await getCredential(BARK_KEY_SLOT)
-  keyCache = stored
-  return stored
+/** The live device key, or null when Bark is not connected. */
+export function readBarkDeviceKey(): string | null {
+  return loadBarkConnection()?.deviceKey ?? null
 }
 
 // ── Desktop host grant ───────────────────────────────────────────────
@@ -310,12 +280,10 @@ export async function ensureBarkHostGranted(
 // ── Connect / disconnect ─────────────────────────────────────────────
 
 /**
- * Parse, store the key, and record the server.
+ * Parse, store the address, and record the server.
  *
- * The vault gate runs before anything is written so a browser user who has
- * not enrolled a protector gets the enrollment dialog instead of a key that
- * then failed to save. The key is not verified against Bark here: the only
- * check Bark offers is a push, and that is what the test button is for.
+ * The address is not verified against Bark here: the only check Bark offers
+ * is a push, and that is what the test button is for.
  */
 export async function connectBark(
   input: string,
@@ -324,29 +292,24 @@ export async function connectBark(
   if (!endpoint) {
     throw new Error('That is not a Bark URL')
   }
-  await assertCanAddCredential()
 
   const grant = await ensureBarkHostGranted(endpoint.origin)
-  await saveCredential(BARK_KEY_SLOT, endpoint.deviceKey)
-  keyCache = endpoint.deviceKey
-
   const connection: BarkConnection = {
     origin: endpoint.origin,
+    deviceKey: endpoint.deviceKey,
     connectedAt: Date.now(),
   }
   storeBarkConnection(connection)
   return { connection, grant }
 }
 
-export async function disconnectBark(): Promise<void> {
-  keyCache = null
+export function disconnectBark(): void {
   try {
     localStorage.removeItem(BARK_CONNECTION_KEY)
   } catch {
     // Nothing to remove.
   }
   notifyConnectionChanged()
-  await deleteCredential(BARK_KEY_SLOT)
 }
 
 // ── Delivery ─────────────────────────────────────────────────────────
@@ -414,8 +377,11 @@ export async function deliverBarkNotification(
   message: NotificationMessage,
 ): Promise<void> {
   const connection = loadBarkConnection()
-  const deviceKey = await readBarkDeviceKey()
-  if (!connection || !deviceKey) throw new BarkNotConnectedError()
+  if (!connection) throw new BarkNotConnectedError()
 
-  await sendBarkPush(connection.origin, deviceKey, formatBarkPayload(message))
+  await sendBarkPush(
+    connection.origin,
+    connection.deviceKey,
+    formatBarkPayload(message),
+  )
 }

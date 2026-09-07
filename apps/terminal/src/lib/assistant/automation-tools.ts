@@ -398,7 +398,7 @@ const channelsSchema = z
       .boolean()
       .default(false)
       .describe(
-        'Only when the user asked for Bark AND has connected a device key in Settings',
+        'Only when the user asked for Bark AND has connected a Bark address in Settings',
       ),
   })
   .describe('Where the alert is delivered. Defaults are in-app plus OS.')

@@ -121,7 +121,7 @@ export function registerChannelDeliveries(): void {
     })
   }
 
-  // Bark — device key comes from the keychain, never from the step (bark.ts)
+  // Bark: address comes from local Settings, never from the step (bark.ts)
   const barkDef = getStepType('bark')
   if (barkDef) {
     registerStepType({

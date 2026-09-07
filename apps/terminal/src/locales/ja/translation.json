@@ -1929,7 +1929,7 @@
         "title": "Bark",
         "description": "iPhoneのBarkアプリにアラートを送り、ターミナルを見ていないときにも届くようにします。",
         "runningNote": "アラートはPairlensが起動している間だけ発火します。デスクトップではウィンドウを閉じたあともバックグラウンドで動き続けられます。",
-        "privacyNote": "デバイスキーはこの端末にだけ残ります。デスクトップではOSのキーチェーン、ブラウザーでは暗号化ボールトです。Pairlensに送られることはありません。",
+        "privacyNote": "Barkアドレスはこの端末にだけ残ります。同期されず、Pairlensに送られることもありません。",
         "setup": {
           "step1": "App StoreからBarkを入れて開きます。",
           "step2": "Barkは https://api.day.app/xxxxxxxx/ のようなURLを表示します。",
@@ -1945,7 +1945,6 @@
         "errorRateLimited": "Barkがこのキーを制限しています。少し待ってから再試行してください。",
         "errorServer": "Barkサーバーに届きませんでした。URLを確認するか、もう一度試してください。",
         "disconnect": "切断",
-        "disconnectFailed": "Barkを切断できませんでした。",
         "connectedTo": "{{host}} へ送信",
         "sendTest": "テスト通知を送る",
         "testSent": "テスト通知を送りました。",

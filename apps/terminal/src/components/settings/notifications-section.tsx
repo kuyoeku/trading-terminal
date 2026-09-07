@@ -34,7 +34,6 @@ import {
   disconnectBark,
   formatBarkPayload,
   parseBarkEndpoint,
-  readBarkDeviceKey,
   sendBarkPush,
 } from '@/lib/notifications/bark'
 import {
@@ -94,12 +93,10 @@ function describeError(
 /**
  * Notification delivery settings.
  *
- * Telegram and Bark live here rather than on the notifications canvas for
- * one reason: the bot token and the device key are credentials. They go to
- * the keychain next to the exchange keys, so they belong on the same kind of
- * surface as those: a place where connecting and revoking are both obvious,
- * rather than in a node's config panel where they would look like rule data
- * and get synced like rule data.
+ * Telegram lives here rather than on the notifications canvas because the
+ * bot token is a credential. Bark lives here too, but for the setup: the
+ * push address is device-local, not rule data, and the test send belongs
+ * next to Connect.
  */
 export function NotificationsSection() {
   const { t } = useTranslation()
@@ -708,6 +705,8 @@ function ChatLink({
 }
 
 // ── Bark ─────────────────────────────────────────────────────────────
+// Push address, not a credential: stored in localStorage, shown in the
+// input, verified with the test send. Rules never carry it.
 
 function describeBarkError(
   error: unknown,
@@ -773,8 +772,6 @@ function BarkConnectForm() {
   const [busy, setBusy] = React.useState(false)
   const [feedback, setFeedback] = React.useState<Feedback>(null)
   const [needsReload, setNeedsReload] = React.useState(false)
-  const [enrollOpen, setEnrollOpen] = React.useState(false)
-  const pendingAction = React.useRef<(() => void) | null>(null)
 
   const handleConnect = async () => {
     const trimmed = url.trim()
@@ -800,11 +797,6 @@ function BarkConnectForm() {
         })
       }
     } catch (error) {
-      if (isVaultEnrollmentRequired(error)) {
-        pendingAction.current = () => void handleConnect()
-        setEnrollOpen(true)
-        return
-      }
       setFeedback({
         type: 'error',
         message: describeBarkError(error, t, 'connectFailed'),
@@ -845,7 +837,7 @@ function BarkConnectForm() {
 
       <div className="flex flex-col gap-2 sm:flex-row">
         <Input
-          type="password"
+          type="text"
           autoComplete="off"
           spellCheck={false}
           value={url}
@@ -873,16 +865,6 @@ function BarkConnectForm() {
           {t('settings.notifications.bark.reloadNow')}
         </Button>
       )}
-
-      <VaultEnrollmentDialog
-        open={enrollOpen}
-        onOpenChange={setEnrollOpen}
-        onEnrolled={() => {
-          const resume = pendingAction.current
-          pendingAction.current = null
-          resume?.()
-        }}
-      />
     </div>
   )
 }
@@ -891,32 +873,17 @@ function BarkConnectedCard() {
   const { t } = useTranslation()
   const connection = useBarkConnection()
   const [feedback, setFeedback] = React.useState<Feedback>(null)
-  const [busy, setBusy] = React.useState<'test' | 'disconnect' | null>(null)
+  const [testing, setTesting] = React.useState(false)
 
   if (!connection) return null
 
-  let host = connection.origin
-  try {
-    host = new URL(connection.origin).hostname
-  } catch {
-    // Keep the stored origin if it is somehow not a URL.
-  }
-
   const handleTest = async () => {
-    setBusy('test')
+    setTesting(true)
     setFeedback(null)
     try {
-      const deviceKey = await readBarkDeviceKey()
-      if (!deviceKey) {
-        setFeedback({
-          type: 'error',
-          message: t('settings.notifications.bark.connectFailed'),
-        })
-        return
-      }
       await sendBarkPush(
         connection.origin,
-        deviceKey,
+        connection.deviceKey,
         formatBarkPayload({
           ruleId: 'test',
           ruleName: t('settings.notifications.bark.testRuleName'),
@@ -937,23 +904,7 @@ function BarkConnectedCard() {
         message: describeBarkError(error, t, 'testFailed'),
       })
     } finally {
-      setBusy(null)
-    }
-  }
-
-  const handleDisconnect = async () => {
-    setBusy('disconnect')
-    setFeedback(null)
-    try {
-      await disconnectBark()
-    } catch (error) {
-      setFeedback({
-        type: 'error',
-        message: t('settings.notifications.bark.disconnectFailed'),
-      })
-      console.warn('[bark] disconnect failed:', error)
-    } finally {
-      setBusy(null)
+      setTesting(false)
     }
   }
 
@@ -966,20 +917,18 @@ function BarkConnectedCard() {
             {t('settings.notifications.bark.title')}
           </p>
           <p className="truncate font-mono text-xs text-muted-foreground">
-            {t('settings.notifications.bark.connectedTo', { host })}
+            {t('settings.notifications.bark.connectedTo', {
+              host: `${connection.origin.replace(/\/$/, '')}/${connection.deviceKey}`,
+            })}
           </p>
         </div>
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => void handleDisconnect()}
-          disabled={busy !== null}
+          onClick={() => disconnectBark()}
+          disabled={testing}
         >
-          {busy === 'disconnect' ? (
-            <Loader2 className="size-3.5 animate-spin" />
-          ) : (
-            <Trash2 className="size-3.5" />
-          )}
+          <Trash2 className="size-3.5" />
           {t('settings.notifications.bark.disconnect')}
         </Button>
       </div>
@@ -988,9 +937,9 @@ function BarkConnectedCard() {
         variant="outline"
         size="sm"
         onClick={() => void handleTest()}
-        disabled={busy !== null}
+        disabled={testing}
       >
-        {busy === 'test' ? (
+        {testing ? (
           <Loader2 className="size-3.5 animate-spin" />
         ) : (
           <Smartphone className="size-3.5" />

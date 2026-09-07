@@ -1929,7 +1929,7 @@
         "title": "Bark",
         "description": "iPhone의 Bark 앱으로 알림을 보내, 터미널을 보고 있지 않을 때도 받게 합니다.",
         "runningNote": "알림은 Pairlens가 실행 중일 때만 발생합니다. 데스크톱에서는 창을 닫은 뒤에도 백그라운드에서 계속 실행할 수 있습니다.",
-        "privacyNote": "기기 키는 이 기기에만 남습니다. 데스크톱은 OS 키체인, 브라우저는 암호화된 금고입니다. Pairlens로 전송되지 않습니다.",
+        "privacyNote": "Bark 주소는 이 기기에만 남습니다. 동기화되지 않으며 Pairlens로 전송되지 않습니다.",
         "setup": {
           "step1": "App Store에서 Bark를 설치하고 엽니다.",
           "step2": "Bark는 https://api.day.app/xxxxxxxx/ 같은 URL을 보여 줍니다.",
@@ -1945,7 +1945,6 @@
         "errorRateLimited": "Bark가 이 키를 제한하고 있습니다. 잠시 후 다시 시도하세요.",
         "errorServer": "Bark 서버에 닿지 못했습니다. URL을 확인하거나 다시 시도하세요.",
         "disconnect": "연결 해제",
-        "disconnectFailed": "Bark 연결을 해제할 수 없습니다.",
         "connectedTo": "{{host}}(으)로 전송",
         "sendTest": "테스트 알림 보내기",
         "testSent": "테스트 알림을 보냈습니다.",

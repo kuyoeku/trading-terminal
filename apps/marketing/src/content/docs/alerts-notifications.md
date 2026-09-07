@@ -5,7 +5,7 @@ group: traders
 parent: automation
 order: 2
 eyebrow: For traders
-updated: 5 SEP 2026
+updated: 7 SEP 2026
 readTime: 8 min read
 ---
 
@@ -223,11 +223,11 @@ notification. You already have a device key the moment you open it.
 3. Press **Send test notification**. If the phone lights up, every alert that
    picks Bark will go there.
 
-The device key is a credential and is stored like one: the OS keychain on
-desktop, your encrypted vault in the browser. It never reaches a Pairlens
-server, and it is deliberately not part of the flow itself, so a rule that
-syncs across your devices does not carry the key with it. That also means each
-device connects its own key (or the same URL pasted again).
+The Bark address stays on this device. It is not a secret, so it is not stored
+in the keychain or the vault, and it never reaches a Pairlens server. It is
+deliberately not part of the flow itself, so a rule that syncs across your
+devices does not carry it. That also means each device pastes its own URL
+(or the same one again).
 
 If a key ever leaks, delete the device in Bark and it stops accepting pushes.
 A self-hosted server on desktop is added to the app's network allowlist when

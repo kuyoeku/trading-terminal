@@ -866,7 +866,7 @@
         "title": "Bark",
         "description": "Send alerts to the Bark app on your iPhone, so they reach you when you are not watching the terminal.",
         "runningNote": "Alerts only fire while Pairlens is running. On desktop it can keep running in the background after you close the window.",
-        "privacyNote": "The device key stays on this device: in the OS keychain on desktop, in your encrypted vault in the browser. It is never sent to Pairlens.",
+        "privacyNote": "The Bark address stays on this device. It is not synced, and it is never sent to Pairlens.",
         "setup": {
           "step1": "Install Bark from the App Store and open it.",
           "step2": "Bark shows a URL that looks like https://api.day.app/xxxxxxxx/.",
@@ -882,7 +882,6 @@
         "errorRateLimited": "Bark is rate-limiting this key. Wait a moment and try again.",
         "errorServer": "Could not reach the Bark server. Check the URL, or try again.",
         "disconnect": "Disconnect",
-        "disconnectFailed": "Could not disconnect Bark.",
         "connectedTo": "Pushing to {{host}}",
         "sendTest": "Send test notification",
         "testSent": "Test notification sent.",

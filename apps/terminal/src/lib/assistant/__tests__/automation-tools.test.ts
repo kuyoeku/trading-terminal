@@ -378,7 +378,8 @@ describe('simple alerts', () => {
     const binding = state.bindings.find((b) => b.ruleId === result.ruleId)!
     expect(binding.pair).toBe('BTC-USDT')
     expect(binding.enabled).toBe(true)
-    // Telegram and Bark need credentials the assistant cannot see, so they stay off.
+    // Telegram needs a credential the assistant cannot see. Bark needs a
+    // Settings connection. Both stay off unless the user asked for them.
     expect(rule.steps.some((step) => step.type === 'telegram')).toBe(false)
     expect(rule.steps.some((step) => step.type === 'bark')).toBe(false)
   })

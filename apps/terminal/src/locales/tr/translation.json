@@ -1929,7 +1929,7 @@
         "title": "Bark",
         "description": "Uyarıları iPhone’daki Bark uygulamasına gönderin, terminale bakmadığınızda da ulaşsın.",
         "runningNote": "Uyarılar yalnızca Pairlens çalışırken tetiklenir. Masaüstünde pencereyi kapattıktan sonra arka planda çalışmaya devam edebilir.",
-        "privacyNote": "Cihaz anahtarı bu cihazda kalır: masaüstünde sistem anahtarlığında, tarayıcıda şifreli kasada. Pairlens’e asla gönderilmez.",
+        "privacyNote": "Bark adresi bu cihazda kalır. Senkronize edilmez ve Pairlens’e asla gönderilmez.",
         "setup": {
           "step1": "Bark’ı App Store’dan kurun ve açın.",
           "step2": "Bark, https://api.day.app/xxxxxxxx/ gibi bir URL gösterir.",
@@ -1945,7 +1945,6 @@
         "errorRateLimited": "Bark bu anahtarı sınırlıyor. Biraz bekleyip yeniden deneyin.",
         "errorServer": "Bark sunucusuna ulaşılamadı. URL’yi kontrol edin veya yeniden deneyin.",
         "disconnect": "Bağlantıyı kes",
-        "disconnectFailed": "Bark bağlantısı kesilemedi.",
         "connectedTo": "{{host}} adresine gönderiliyor",
         "sendTest": "Test bildirimi gönder",
         "testSent": "Test bildirimi gönderildi.",
