@@ -33,6 +33,53 @@ describe('isUrlAllowed', () => {
     )
   })
 
+  test('own-origin custom schemes pass the protocol gate, host check still applies', () => {
+    const ownOrigin = 'tauri://localhost'
+    // macOS desktop webview serves the app's own assets on the tauri: scheme;
+    // the runtime must reach /_pyodide/ there, so its own origin is exempt
+    // from the protocol gate but the hostname allowlist still applies.
+    expect(
+      isUrlAllowed(
+        'tauri://localhost/_pyodide/pyodide-lock.json',
+        ['localhost'],
+        undefined,
+        ownOrigin,
+      ),
+    ).toBe(true)
+    // Without the exemption (or with a different own origin) the scheme
+    // is denied, exactly as before.
+    expect(
+      isUrlAllowed('tauri://localhost/_pyodide/pyodide-lock.json', [
+        'localhost',
+      ]),
+    ).toBe(false)
+    expect(
+      isUrlAllowed(
+        'tauri://localhost/_pyodide/pyodide-lock.json',
+        ['localhost'],
+        undefined,
+        'http://tauri.localhost',
+      ),
+    ).toBe(false)
+    // The exemption does not widen other schemes or lookalike hosts.
+    expect(
+      isUrlAllowed(
+        'https://evil.example.com/_pyodide/x',
+        ['localhost'],
+        undefined,
+        ownOrigin,
+      ),
+    ).toBe(false)
+    expect(
+      isUrlAllowed(
+        'tauri://localhost.evil.com/_pyodide/x',
+        ['localhost'],
+        undefined,
+        ownOrigin,
+      ),
+    ).toBe(false)
+  })
+
   test('empty allowlist denies everything', () => {
     expect(isUrlAllowed('https://api.okx.com', [])).toBe(false)
   })

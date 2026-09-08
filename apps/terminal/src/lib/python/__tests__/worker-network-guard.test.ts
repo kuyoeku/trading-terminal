@@ -78,6 +78,41 @@ describe('the worker installs a guard before Pyodide', () => {
     ).toBe(true)
   })
 
+  /**
+   * The desktop webview mounts the app on its own custom origin:
+   * `tauri://localhost` on macOS, `http://tauri.localhost` on Windows/Linux.
+   * The guard's protocol gate only knows http/ws, so Pyodide's fetch of
+   * `tauri://localhost/_pyodide/pyodide-lock.json` was denied before it ever
+   * reached the network on macOS — the user's exact desktop error. The worker
+   * therefore passes its own origin to the guard, which exempts it from the
+   * gate while the hostname allowlist still applies.
+   */
+  test('the own origin passes the desktop webview custom scheme', () => {
+    const desktopLocation = {
+      href: 'blob:tauri://localhost/16673247-a245-41f9',
+      hostname: '',
+      origin: 'tauri://localhost',
+    }
+    expect(workerOriginHost(desktopLocation)).toBe('localhost')
+    expect(
+      isUrlAllowed(
+        'tauri://localhost/_pyodide/pyodide-lock.json',
+        [workerOriginHost(desktopLocation)],
+        undefined,
+        desktopLocation.origin,
+      ),
+    ).toBe(true)
+    // The guard call carries the origin: the worker would otherwise share the
+    // plugin sandbox's default of "own origin is not special".
+    expect(WORKER).toContain('self.location.origin')
+    // The exemption is not a widening: the same URL without own-origin is denied.
+    expect(
+      isUrlAllowed('tauri://localhost/_pyodide/pyodide-lock.json', [
+        workerOriginHost(desktopLocation),
+      ]),
+    ).toBe(false)
+  })
+
   test('a real worker URL and an opaque origin both resolve sanely', () => {
     expect(
       workerOriginHost({

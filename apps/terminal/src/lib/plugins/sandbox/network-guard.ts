@@ -29,11 +29,20 @@ export type MutableAllowlist = { hosts: ReadonlyArray<string> }
 
 const ALLOWED_PROTOCOLS = new Set(['http:', 'https:', 'ws:', 'wss:'])
 
-/** Pure allowlist check — exact hostname or single leading `*.` wildcard. */
+/**
+ * Pure allowlist check — exact hostname or single leading `*.` wildcard.
+ *
+ * `ownOrigin` exempts one origin from the protocol gate: the runtime's own
+ * origin serves assets it must reach (the pyodide core under `/_pyodide/`),
+ * and in the desktop webview that origin is a custom scheme (`tauri://` on
+ * macOS, `asset://` elsewhere) the gate does not know. The exempted URL still
+ * has to match the hostname allowlist like anything else.
+ */
 export function isUrlAllowed(
   rawUrl: string,
   hosts: ReadonlyArray<string>,
   base?: string,
+  ownOrigin?: string,
 ): boolean {
   let url: URL
   try {
@@ -41,7 +50,9 @@ export function isUrlAllowed(
   } catch {
     return false
   }
-  if (!ALLOWED_PROTOCOLS.has(url.protocol)) return false
+  if (!ALLOWED_PROTOCOLS.has(url.protocol) && !isSameOrigin(url, ownOrigin)) {
+    return false
+  }
   const hostname = url.hostname.toLowerCase()
   return hosts.some((pattern) => {
     const p = pattern.toLowerCase()
@@ -51,6 +62,26 @@ export function isUrlAllowed(
     }
     return hostname === p
   })
+}
+
+/**
+ * Scheme + host + port equality against the guard's own origin.
+ *
+ * `new URL().origin` serializes to "null" for any scheme outside the special
+ * set (http/https/ws/wss/ftp/file), so origin equality cannot recognize the
+ * desktop webview's own `tauri://` origin. Comparing the parsed scheme and
+ * host does, for custom and standard schemes alike.
+ */
+function isSameOrigin(url: URL, ownOrigin: string | undefined): boolean {
+  if (!ownOrigin) return false
+  let own: URL
+  try {
+    own = new URL(ownOrigin)
+  } catch {
+    // Opaque origins serialize to "null", which is not parseable.
+    return false
+  }
+  return url.protocol === own.protocol && url.host === own.host
 }
 
 /**
@@ -142,6 +173,13 @@ export function installNetworkGuard(
   allowlist: MutableAllowlist,
   /** Names the list that refused, for the error the author reads. */
   denyReason?: string,
+  /**
+   * The sandbox's own origin. Requests to it skip the protocol gate so the
+   * runtime can reach its own assets on the desktop webview's custom scheme
+   * — see `isUrlAllowed`. The plugin sandbox leaves this unset: a plugin
+   * reaches the app origin only when its manifest declares the host.
+   */
+  ownOrigin?: string,
 ): void {
   const deny = (url: string): never => {
     throw new PluginNetworkDeniedError(url, denyReason)
@@ -156,7 +194,7 @@ export function installNetworkGuard(
         : input instanceof URL
           ? input.href
           : input.url
-    if (!isUrlAllowed(url, allowlist.hosts)) {
+    if (!isUrlAllowed(url, allowlist.hosts, undefined, ownOrigin)) {
       return Promise.reject(new PluginNetworkDeniedError(url, denyReason))
     }
     return realFetch(input, init)
@@ -180,7 +218,7 @@ export function installNetworkGuard(
       ...rest: Array<unknown>
     ): void {
       const raw = typeof url === 'string' ? url : url.href
-      if (!isUrlAllowed(raw, allowlist.hosts)) deny(raw)
+      if (!isUrlAllowed(raw, allowlist.hosts, undefined, ownOrigin)) deny(raw)
       ;(realOpen as (...a: Array<unknown>) => void).call(
         this,
         method,
@@ -205,7 +243,7 @@ export function installNetworkGuard(
     const GuardedWebSocket = class WebSocket extends RealWebSocket {
       constructor(url: string | URL, protocols?: string | Array<string>) {
         const raw = typeof url === 'string' ? url : url.href
-        if (!isUrlAllowed(raw, allowlist.hosts)) deny(raw)
+        if (!isUrlAllowed(raw, allowlist.hosts, undefined, ownOrigin)) deny(raw)
         super(url, protocols)
       }
     }
@@ -218,7 +256,7 @@ export function installNetworkGuard(
     const GuardedEventSource = class EventSource extends RealEventSource {
       constructor(url: string | URL, init?: EventSourceInit) {
         const raw = typeof url === 'string' ? url : url.href
-        if (!isUrlAllowed(raw, allowlist.hosts)) deny(raw)
+        if (!isUrlAllowed(raw, allowlist.hosts, undefined, ownOrigin)) deny(raw)
         super(url, init)
       }
     }

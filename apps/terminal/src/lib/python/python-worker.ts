@@ -73,6 +73,14 @@ import type {
  * wasm. The other three are where compiled wheels and pure-Python wheels come
  * from, and they are the same three the desktop CSP baseline carries for
  * exactly this reason.
+ *
+ * The same origin is ALSO passed to the guard itself. The guard's protocol
+ * gate knows http/ws, but on the desktop webview the app's own origin is a
+ * custom scheme (`tauri://localhost` on macOS), so without the exemption
+ * Pyodide's fetch of its own lockfile was refused before it ever reached the
+ * network: `[sandbox] Network access to "tauri://localhost/_pyodide/..." denied`.
+ * The exemption still requires the hostname to be allowlisted, which is what
+ * `workerOriginHost` already provides.
  */
 const PYTHON_RUNTIME_HOSTS: ReadonlyArray<string> = Object.freeze(
   [
@@ -90,6 +98,7 @@ installNetworkGuard(
   { hosts: PYTHON_RUNTIME_HOSTS },
   'Python indicators may only reach the package registries the runtime ' +
     'installs from. There is no way to widen this from a script.',
+  self.location.origin,
 )
 
 type Pyodide = Awaited<ReturnType<typeof loadPyodide>>
